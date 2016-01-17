@@ -6,55 +6,40 @@
 //  Copyright © 2016 Ethan Jackwitz. All rights reserved.
 //
 
-enum Board: Int, Rankable {
-	case TopLeft
-	case TopCenter
-	case TopRight
-
-	case CenterLeft
-	case Center
-	case CenterRight
-
-	case BottomLeft
-	case BottomCenter
-	case BottomRight
-
+enum Board: Rankable {
+	case TL, TR
+	case BL, BR
+	
 	var position: (x: Int, y: Int) {
 		switch self {
-		case .TopLeft: return (x: 0, y: 0)
-		case .CenterLeft: return (x: 0, y: 1)
-		case .BottomLeft: return (x: 0, y: 2)
-		case .TopCenter: return (x: 1, y: 0)
-		case .Center: return (x: 1, y: 1)
-		case .BottomCenter: return (x: 1, y: 2)
-		case .TopRight: return (x: 2, y: 0)
-		case .CenterRight: return (x: 2, y: 1)
-		case .BottomRight: return (x: 2, y: 2)
+			case .BL: return (x: 0, y: 0)
+			case .TL: return (x: 0, y: 1)
+			case .BR: return (x: 1, y: 0)
+			case .TR: return (x: 1, y: 1)
 		}
 	}
-
+	
 	func dominates(other: Board) -> Bool? {
+	
 		var (flagOurs, flagTheirs) = (false, false)
 		let arr = [
 			(self.position.x, other.position.x),
-			(self.position.y, other.position.y),
+			(self.position.y, other.position.y)
 		]
-		arr.forEach { ours, theirs in
-			//checks for higher values
-			if ours < theirs {
-				flagOurs = true
-			}
-			//checks for higher values
-			if ours > theirs {
-				flagTheirs = true
-			}
+		
+		for (ours, theirs) in arr {
+			if ours < theirs { flagOurs = true }
+			if theirs < ours { flagTheirs = true }
+			if flagTheirs && flagOurs { return .None }
 		}
-
+		
 		switch (flagOurs, flagTheirs) {
-		case (true, false): return true
-		case (false, true): return false
-		default: return .None
+		case (true,  false): return true
+		case (false, true):  return false
+		case (false, false): return .None
+		case (true,  true):  return .None
 		}
+		
 	}
 }
 
@@ -72,20 +57,42 @@ class RankingTests: XCTestCase {
     super.tearDown()
   }
 	
+	func testDominance() {
+	
+	XCTAssert(Board.BL.dominates(.TR) == true)
+	XCTAssert(Board.BL.dominates(.BR) == true)
+	XCTAssert(Board.BL.dominates(.TL) == true)
+	
+	XCTAssert(Board.TR.dominates(.BL) == false)
+	XCTAssert(Board.BR.dominates(.BL) == false)
+	XCTAssert(Board.TL.dominates(.BL) == false)
+	
+	XCTAssert(Board.TL.dominates(.BR) == .None)
+	XCTAssert(Board.BR.dominates(.TL) == .None)
+	
+	XCTAssert(Board.TR.dominates(.BL) == false)
+	XCTAssert(Board.TR.dominates(.BR) == false)
+	XCTAssert(Board.TR.dominates(.TL) == false)
+		
+	XCTAssert(Board.TR.dominates(.TR) == .None)
+	XCTAssert(Board.BR.dominates(.BR) == .None)
+	XCTAssert(Board.TL.dominates(.TL) == .None)
+	XCTAssert(Board.BL.dominates(.BL) == .None)
+		
+	}
+	
   func testRankingSystem() {
-    let boardPositions = (0..<9).map({ x in Board(rawValue: x)! })
+		let boardPositions: [Board] = [.TL, .TR, .BL, .BR]
 
     let rankings = assignRankings(boardPositions)
   	
   	let expectedOutput: [[Board]] = [
-    	[.BottomRight],
-    	[.CenterRight, .BottomCenter],
-    	[.TopRight, .Center, .BottomLeft],
-    	[.CenterLeft, .TopCenter],
-    	[.TopLeft]
+			[.BL],
+			[.TL, .BR],
+			[.TR]
   	]
   	
-  	assert(rankings.flatMap({ return $0 }) == expectedOutput.flatMap({ return $0 }))
+  	XCTAssert(rankings.flatMap({ return $0 }) == expectedOutput.flatMap({ return $0 }))
   }
 	
 }
