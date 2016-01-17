@@ -22,7 +22,7 @@ func assignRankings<U: Rankable>(individuals: [U]) -> [[U]] {
 
 	for individual in individuals {
 		for otherIndividual in individuals
-			where individual != otherIndividual && individual.dominates(otherIndividual) == true
+			where individual != otherIndividual && individual.dominates(otherIndividual) == false
 		{
 				domination[individual]! += 1
 		}
