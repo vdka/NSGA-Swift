@@ -59,7 +59,7 @@ class CrowdingTests: XCTestCase {
 		}
 		
 //		let population: [[Double]] = 0.0.stride(to: 10, by: 1).map(f).reverse()
-		let population: [[Double]] = 0.0.stride(to: 10, by: 1).map(f)
+		let population: [[Double]] = 0.0.stride(to: 10, by: 1).map(f).reverse()
 		
 		let dist = crowdingDistance(population)
 //		let dist = crowdingDistance(population.map({ $0.shuffled() }))
@@ -68,7 +68,7 @@ class CrowdingTests: XCTestCase {
 		
 		XCTAssert(dist.first! == Double.infinity)
 		XCTAssert(dist.last! == Double.infinity)
-		XCTAssert(dist.dropFirst().dropLast().follows(>=))
+		XCTAssert(dist.dropFirst().dropLast().follows(<=))
 		
 		
 	}

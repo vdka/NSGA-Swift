@@ -24,7 +24,7 @@ func crowdingDistance(front: [[Double]]) -> [Double] {
 		
 		let sortedPairs = objValues.enumerate().sort({ $0.0.element < $0.1.element })
 		
-		let range = objValues.maxElement()!
+		let range = objValues.maxElement()! - objValues.minElement()!
 		
 //		for index in objValues.indices {
 		for (index, pair) in sortedPairs.enumerate() {
