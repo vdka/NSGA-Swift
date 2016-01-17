@@ -61,6 +61,24 @@ extension Array {
 		
 		return result
 	}
+	
+	subscript (safe index: Int) -> Generator.Element? {
+		return indices ~= index ? self[index] : nil
+	}
+	
+}
+
+func transpose<T>(input: [[T]]) -> [[T]] {
+	guard !input.isEmpty else { return [] }
+	let count = input[0].count
+	var out: [[T]] = Array.init(count: count, repeatedValue: [])
+	for outer in input {
+		for (index, inner) in outer.enumerate() {
+			out[index].append(inner)
+		}
+	}
+	
+	return out
 }
 
 infix operator ** { associativity left precedence 155 }

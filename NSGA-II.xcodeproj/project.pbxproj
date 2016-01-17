@@ -21,6 +21,9 @@
 		AA7EE0401C4B361A005615CF /* Random.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA32A6421C329E6800035F84 /* Random.swift */; };
 		AA7EE0411C4B361D005615CF /* Misc.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA32A6441C32A57E00035F84 /* Misc.swift */; };
 		AA7EE0421C4B3624005615CF /* Dominance.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA7EE02E1C4A35C7005615CF /* Dominance.swift */; };
+		AA7EE0441C4B68C1005615CF /* CrowdingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA7EE0431C4B68C1005615CF /* CrowdingTests.swift */; };
+		AA7EE0461C4B6E16005615CF /* Crowding.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA7EE0451C4B6E16005615CF /* Crowding.swift */; };
+		AA7EE0471C4B6E16005615CF /* Crowding.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA7EE0451C4B6E16005615CF /* Crowding.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -46,8 +49,10 @@
 		AA7EE02C1C4A2EC2005615CF /* Ranking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Ranking.swift; sourceTree = "<group>"; };
 		AA7EE02E1C4A35C7005615CF /* Dominance.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dominance.swift; sourceTree = "<group>"; };
 		AA7EE0361C4B358D005615CF /* NSGA-II-Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "NSGA-II-Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		AA7EE0381C4B358D005615CF /* RankingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankingTests.swift; sourceTree = "<group>"; };
+		AA7EE0381C4B358D005615CF /* RankingTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RankingTests.swift; sourceTree = "<group>"; };
 		AA7EE03A1C4B358D005615CF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AA7EE0431C4B68C1005615CF /* CrowdingTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CrowdingTests.swift; sourceTree = "<group>"; };
+		AA7EE0451C4B6E16005615CF /* Crowding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Crowding.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,6 +99,7 @@
 				AA32A6401C329A6700035F84 /* NSGA-II.swift */,
 				AA7EE02C1C4A2EC2005615CF /* Ranking.swift */,
 				AA7EE02E1C4A35C7005615CF /* Dominance.swift */,
+				AA7EE0451C4B6E16005615CF /* Crowding.swift */,
 				AA4F135E1C4A277900BA35AC /* Evaluator.swift */,
 				AA32A6421C329E6800035F84 /* Random.swift */,
 				AA32A6441C32A57E00035F84 /* Misc.swift */,
@@ -105,6 +111,7 @@
 			isa = PBXGroup;
 			children = (
 				AA7EE0381C4B358D005615CF /* RankingTests.swift */,
+				AA7EE0431C4B68C1005615CF /* CrowdingTests.swift */,
 				AA7EE03A1C4B358D005615CF /* Info.plist */,
 			);
 			path = "NSGA-II-Tests";
@@ -204,6 +211,7 @@
 				AA32A63F1C3299BD00035F84 /* main.swift in Sources */,
 				AA7EE02D1C4A2EC2005615CF /* Ranking.swift in Sources */,
 				AA32A6431C329E6800035F84 /* Random.swift in Sources */,
+				AA7EE0461C4B6E16005615CF /* Crowding.swift in Sources */,
 				AA4F135D1C4A11A300BA35AC /* ProblemDescription.swift in Sources */,
 				AA4F135F1C4A277900BA35AC /* Evaluator.swift in Sources */,
 			);
@@ -215,9 +223,11 @@
 			files = (
 				AA7EE0401C4B361A005615CF /* Random.swift in Sources */,
 				AA7EE03E1C4B360B005615CF /* Ranking.swift in Sources */,
+				AA7EE0441C4B68C1005615CF /* CrowdingTests.swift in Sources */,
 				AA7EE0391C4B358D005615CF /* RankingTests.swift in Sources */,
 				AA7EE0411C4B361D005615CF /* Misc.swift in Sources */,
 				AA7EE0421C4B3624005615CF /* Dominance.swift in Sources */,
+				AA7EE0471C4B6E16005615CF /* Crowding.swift in Sources */,
 				AA7EE03F1C4B3611005615CF /* NSGA-II.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -369,6 +379,7 @@
 				AA7EE03D1C4B358D005615CF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
