@@ -6,6 +6,11 @@
 //  Copyright © 2016 Ethan Jackwitz. All rights reserved.
 //
 
+//NOTE (ethan): this should be `{ get set }`
+protocol CrowdingAssignable {
+	var obj: [Double] { get }
+}
+
 /**
 This function computes the _crowding distance_ for a set of coordinates
 
@@ -14,9 +19,9 @@ This function computes the _crowding distance_ for a set of coordinates
 - returns: The crowding distance for each point
 */
 //func crowdingDistance(inout front: [Individual]) {
-func crowdingDistance(front: [[Double]]) -> [Double] {
+func crowdingDistance(front: [CrowdingAssignable]) -> [Double] {
 	
-	let values = transpose(front)
+	let values = transpose(front.map({ $0.obj }))
 	
 	var crowding: [Double] = Array.init(count: front.count, repeatedValue: 0.0)
 
@@ -26,12 +31,10 @@ func crowdingDistance(front: [[Double]]) -> [Double] {
 		
 		let range = objValues.maxElement()! - objValues.minElement()!
 		
-//		for index in objValues.indices {
 		for (index, pair) in sortedPairs.enumerate() {
 			guard let prev = objValues[safe: index - 1],
       			let next = objValues[safe: index + 1]
 			else {
-				//Do nothing to crowding distance for the edge elements in a front
 				crowding[pair.index] = Double.infinity
 				continue
 			}

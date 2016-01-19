@@ -17,7 +17,7 @@ protocol Rankable: Hashable {
 	func dominates(other: Self) -> Bool?
 }
 
-func assignRankings<U: Rankable>(individuals: [U]) -> [[U]] {
+func assignDominance<U: Rankable>(individuals: [U]) -> [U: Int] {
 	var domination: [U: Int] = Dictionary.init(individuals.map({ ($0, 0) }))
 
 	for individual in individuals {
@@ -28,7 +28,7 @@ func assignRankings<U: Rankable>(individuals: [U]) -> [[U]] {
 		}
 	}
 
-	return assignFronts(domination)
+	return domination
 }
 
 func assignFronts<U: Rankable>(individualsWithDominance: [U: Int]) -> [[U]] {

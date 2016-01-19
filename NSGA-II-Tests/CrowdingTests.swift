@@ -31,17 +31,11 @@ extension CollectionType where SubSequence.Generator.Element == Generator.Elemen
 	}
 }
 
+extension CGPoint: CrowdingAssignable {
+	var obj: [Double] { return [Double(x), Double(y)] }
+}
+
 class CrowdingTests: XCTestCase {
-	
-	override func setUp() {
-		super.setUp()
-		// Put setup code here. This method is called before the invocation of each test method in the class.
-	}
-	
-	override func tearDown() {
-		// Put teardown code here. This method is called after the invocation of each test method in the class.
-		super.tearDown()
-	}
 	
 	func testFollows() {
 		XCTAssert([0, 2, 4, 6].follows(<=))
@@ -53,18 +47,14 @@ class CrowdingTests: XCTestCase {
 	
 	func testCrowding() {
 		
-		let f: (Double) -> [Double] = {
+		let f: (Double) -> CGPoint = {
 			let x = Double($0)
-			return [x, x * x]
+			return CGPoint(x: x, y: x * x)
 		}
 		
-//		let population: [[Double]] = 0.0.stride(to: 10, by: 1).map(f).reverse()
-		let population: [[Double]] = 0.0.stride(to: 10, by: 1).map(f).reverse()
+		let population: [CrowdingAssignable] = 0.0.stride(to: 10, by: 1).map(f).reverse()
 		
 		let dist = crowdingDistance(population)
-//		let dist = crowdingDistance(population.map({ $0.shuffled() }))
-		
-		//NOTE (ethan): This is calculating the crowding distances but it they are not being associated with the correct indices.
 		
 		XCTAssert(dist.first! == Double.infinity)
 		XCTAssert(dist.last! == Double.infinity)

@@ -59,40 +59,50 @@ class RankingTests: XCTestCase {
 	
 	func testDominance() {
 	
-	XCTAssert(Board.BL.dominates(.TR) == true)
-	XCTAssert(Board.BL.dominates(.BR) == true)
-	XCTAssert(Board.BL.dominates(.TL) == true)
-	
-	XCTAssert(Board.TR.dominates(.BL) == false)
-	XCTAssert(Board.BR.dominates(.BL) == false)
-	XCTAssert(Board.TL.dominates(.BL) == false)
-	
-	XCTAssert(Board.TL.dominates(.BR) == .None)
-	XCTAssert(Board.BR.dominates(.TL) == .None)
-	
-	XCTAssert(Board.TR.dominates(.BL) == false)
-	XCTAssert(Board.TR.dominates(.BR) == false)
-	XCTAssert(Board.TR.dominates(.TL) == false)
-		
-	XCTAssert(Board.TR.dominates(.TR) == .None)
-	XCTAssert(Board.BR.dominates(.BR) == .None)
-	XCTAssert(Board.TL.dominates(.TL) == .None)
-	XCTAssert(Board.BL.dominates(.BL) == .None)
+  	XCTAssert(Board.BL.dominates(.TR) == true)
+  	XCTAssert(Board.BL.dominates(.BR) == true)
+  	XCTAssert(Board.BL.dominates(.TL) == true)
+  	
+  	XCTAssert(Board.TR.dominates(.BL) == false)
+  	XCTAssert(Board.BR.dominates(.BL) == false)
+  	XCTAssert(Board.TL.dominates(.BL) == false)
+  	
+  	XCTAssert(Board.TL.dominates(.BR) == .None)
+  	XCTAssert(Board.BR.dominates(.TL) == .None)
+  	
+  	XCTAssert(Board.TR.dominates(.BL) == false)
+  	XCTAssert(Board.TR.dominates(.BR) == false)
+  	XCTAssert(Board.TR.dominates(.TL) == false)
+  		
+  	XCTAssert(Board.TR.dominates(.TR) == .None)
+  	XCTAssert(Board.BR.dominates(.BR) == .None)
+  	XCTAssert(Board.TL.dominates(.TL) == .None)
+  	XCTAssert(Board.BL.dominates(.BL) == .None)
 		
 	}
 	
   func testRankingSystem() {
 		let boardPositions: [Board] = [.TL, .TR, .BL, .BR]
 
-    let rankings = assignRankings(boardPositions)
+		let output = assignDominance(boardPositions)
+		
+		let expectedOutput: [Board: Int] = [.BL: 0, .TL: 1, .BR: 1, .TR: 3]
   	
+		XCTAssert(output == expectedOutput)
+  }
+	
+	func testFrontAssignment() {
+		let dominanceInput: [Board: Int] = [.BL: 0, .TL: 1, .BR: 1, .TR: 3]
+		
+		let output = assignFronts(dominanceInput)
+		
   	let expectedOutput: [[Board]] = [
 			[.BL],
 			[.TL, .BR],
 			[.TR]
   	]
-  	
-  	XCTAssert(rankings.flatMap({ return $0 }) == expectedOutput.flatMap({ return $0 }))
-  }
+		
+  	XCTAssert(output.flatMap({ return $0 }) == expectedOutput.flatMap({ return $0 }))
+	}
 	
 }
