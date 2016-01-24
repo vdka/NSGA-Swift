@@ -10,23 +10,23 @@ import XCTest
 
 extension CollectionType where SubSequence.Generator.Element == Generator.Element {
 	func follows(comparison: (Generator.Element, Generator.Element) -> Bool) -> Bool {
-		
+
 		switch self.count {
 		case 0: return true
 		case 1: return true
 		default: break
 		}
-		
+
 		var last: Generator.Element = self.first!
-		
+
 		for curr in self.dropFirst() {
 			guard comparison(last, curr) else {
 				return false
 			}
-			
+
 			last = curr
 		}
-		
+
 		return true
 	}
 }
@@ -36,7 +36,7 @@ extension CGPoint: CrowdingAssignable {
 }
 
 class CrowdingTests: XCTestCase {
-	
+
 	func testFollows() {
 		XCTAssert([0, 2, 4, 6].follows(<=))
 		XCTAssertFalse([0, 2, 4, 6, 1].follows(<=))
@@ -46,21 +46,31 @@ class CrowdingTests: XCTestCase {
 	}
 	
 	func testCrowding() {
-		
+
 		let f: (Double) -> CGPoint = {
 			let x = Double($0)
 			return CGPoint(x: x, y: x * x)
 		}
-		
-		let population: [CrowdingAssignable] = 0.0.stride(to: 10, by: 1).map(f).reverse()
-		
+
+		let population: [CGPoint] = 0.0.stride(to: 10, by: 1).map(f).reverse()
+
 		let dist = crowdingDistance(population)
-		
+
 		XCTAssert(dist.first! == Double.infinity)
 		XCTAssert(dist.last! == Double.infinity)
-		XCTAssert(dist.dropFirst().dropLast().follows(<=))
+		XCTAssert(dist.dropFirst().dropLast().follows(>=))
 		
+		let points = [(20, 6), (14, 7), (10, 8), (9, 9), (8, 10), (7, 14), (6, 20)].map({ CGPoint(x: $0.0, y: $0.1) })
 		
+		let dist2 = crowdingDistance(points)
+		
+		XCTAssert(dist2.first == Double.infinity)
+		XCTAssert(dist2.last == Double.infinity)
+		
+		XCTAssert(dist2[3] == dist2.minElement())
+		XCTAssert(dist2[2] == dist2[4])
+		XCTAssert(dist2[1] == dist2[5])
+
 	}
-	
+
 }

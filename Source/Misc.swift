@@ -36,20 +36,21 @@ extension Array {
 
 		return shuffled
 	}
-	
+
 	/**
 	Applies cond to each element in array, splitting it each time cond returns a new value.
 	
-	:param: cond Function which takes an element and produces an equatable result.
-	:returns: Array partitioned in order, splitting via results of cond.
+	- parameter cond: Function which takes an element and produces an equatable result.
+	
+	- returns: Array partitioned in order, splitting via results of cond.
 	*/
 	func partitionBy <T: Equatable> (cond: (Element) -> T) -> [Array] {
 		var result = [Array]()
 		var lastValue: T? = nil
-		
+
 		for item in self {
 			let value = cond(item)
-			
+
 			if value == lastValue {
 				let index: Int = result.count - 1
 				result[index] += [item]
@@ -58,14 +59,14 @@ extension Array {
 				lastValue = value
 			}
 		}
-		
+
 		return result
 	}
-	
+
 	subscript (safe index: Int) -> Generator.Element? {
 		return indices ~= index ? self[index] : nil
 	}
-	
+
 }
 
 func transpose<T>(input: [[T]]) -> [[T]] {
@@ -77,7 +78,7 @@ func transpose<T>(input: [[T]]) -> [[T]] {
 			out[index].append(inner)
 		}
 	}
-	
+
 	return out
 }
 

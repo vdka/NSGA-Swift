@@ -18,35 +18,37 @@ This function computes the _crowding distance_ for a set of coordinates
 
 - returns: The crowding distance for each point
 */
-//func crowdingDistance(inout front: [Individual]) {
-func crowdingDistance(front: [CrowdingAssignable]) -> [Double] {
-	
+func crowdingDistance<U: CrowdingAssignable>(front: [U]) -> [Double] {
+
 	let values = transpose(front.map({ $0.obj }))
-	
+
 	var crowding: [Double] = Array.init(count: front.count, repeatedValue: 0.0)
 
 	for objValues in values {
-		
-		let sortedPairs = objValues.enumerate().sort({ $0.0.element < $0.1.element })
-		
+
+		let sortedPairs = objValues.enumerate().sort({ $0.element < $1.element })
+
 		let range = objValues.maxElement()! - objValues.minElement()!
-		
+		guard range != 0 else { fatalError() }
+
 		for (index, pair) in sortedPairs.enumerate() {
-			guard let prev = objValues[safe: index - 1],
-      			let next = objValues[safe: index + 1]
+			guard let prev = sortedPairs[safe: index - 1]?.element,
+      			let next = sortedPairs[safe: index + 1]?.element
 			else {
 				crowding[pair.index] = Double.infinity
 				continue
 			}
 			
-			crowding[pair.index] += abs((next - prev) / range)
+			let c = abs((next - prev) / range)
+
+			crowding[pair.index] += c
 		}
-		
+
 	}
-	
-	for i in (0..<front.count) {
-		crowding[i] = crowding[i] / Double(values.count)
+
+	for index in front.indices {
+		crowding[index] = crowding[index] / Double(values.count)
 	}
-	
+
 	return crowding
 }

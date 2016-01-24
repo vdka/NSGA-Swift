@@ -108,14 +108,12 @@ struct Individual: Equatable, Hashable {
 	}
 }
 
-func ==(lhs: Individual, rhs: Individual) -> Bool {
+func == (lhs: Individual, rhs: Individual) -> Bool {
 	return lhs.hashValue == rhs.hashValue
 }
 
 struct Population {
 	var individuals: [Individual] = []
-
-	var fronts: [Individual] = []
 
 	let size: Int
 

@@ -8,6 +8,7 @@
 
 import Foundation
 
+//TODO (ethan): remove Hashable requirement
 protocol Rankable: Hashable {
 	/**
 	- parameter other: The other `Rankable` to test dominance against
@@ -17,6 +18,7 @@ protocol Rankable: Hashable {
 	func dominates(other: Self) -> Bool?
 }
 
+//TODO (ethan): switch from dict to tuple
 func assignDominance<U: Rankable>(individuals: [U]) -> [U: Int] {
 	var domination: [U: Int] = Dictionary.init(individuals.map({ ($0, 0) }))
 
