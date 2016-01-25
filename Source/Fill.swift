@@ -7,8 +7,8 @@
 //
 
 func best<U: protocol<Rankable, CrowdingAssignable>>(n: Int, from individuals: [U]) -> [U] {
-	guard individuals.count != n else { return individuals }
-	guard individuals.count > n else { fatalError() }
+	guard n < individuals.count else { return individuals }
+	
 	let dominance = assignDominance(individuals)
 	let fronts = assignFronts(dominance)
 	
