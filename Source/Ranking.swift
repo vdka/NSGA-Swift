@@ -6,8 +6,6 @@
 //  Copyright © 2016 Ethan Jackwitz. All rights reserved.
 //
 
-import Foundation
-
 //TODO (ethan): remove Hashable requirement
 protocol Rankable: Hashable {
 	/**

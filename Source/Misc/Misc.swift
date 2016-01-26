@@ -6,6 +6,8 @@
 //  Copyright © 2015 Ethan Jackwitz. All rights reserved.
 //
 
+import Darwin
+
 extension Array {
 	subscript (index: UInt) -> Element {
 		return self[Int(index)]
@@ -85,7 +87,11 @@ func transpose<T>(input: [[T]]) -> [[T]] {
 infix operator ** { associativity left precedence 155 }
 
 func **(base: Int, exponent: Int) -> Int {
-	return (0..<exponent-1).reduce(base) { total, _ in total * base }
+	return Int(pow(Double(base), Double(exponent)))
+}
+
+func **(base: Double, exponent: Double) -> Double {
+	return pow(base, exponent)
 }
 
 extension Dictionary {

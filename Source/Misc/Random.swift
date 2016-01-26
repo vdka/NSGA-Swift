@@ -11,8 +11,8 @@ import Darwin
 
 public extension Bool {
 	/// SwiftRandom extension
-	public static func random() -> Bool {
-		return Int.random() % 2 == 0
+	public static func random(percent: Double = 0.5) -> Bool {
+		return Double.random(0, 1) < percent
 	}
 }
 
