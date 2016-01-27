@@ -16,6 +16,8 @@ class TournamentTests: XCTestCase {
 		let b = Point(x: 2, y: 2)
 		
 		XCTAssert(tournamentSelection(a, b) == a)
+		XCTAssert(tournamentSelection(b, a) == a)
+		XCTAssert(tournamentSelection(a, a) == a)
 		
 	}
 	
