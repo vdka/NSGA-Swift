@@ -10,10 +10,10 @@ protocol Genetic {
 	var reals: [Double] { get set }
 }
 
-func crossoverReals<U>(crossoverChance: Double, parentsReals: ([U], [U])) -> ([U], [U]) {
+func crossoverReals<U>(chance: Double, parentsReals: ([U], [U])) -> ([U], [U]) {
 	
 	guard parentsReals.0.count == parentsReals.1.count else { fatalError() }
-	guard Bool.random(crossoverChance) else { return parentsReals }
+	guard Bool.random(chance) else { return parentsReals }
 	
 	var (pa, pb) = parentsReals
 	var (ca, cb): ([U], [U]) = ([], [])
