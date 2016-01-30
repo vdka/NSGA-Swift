@@ -13,6 +13,30 @@ extension Array {
 		return indices ~= index ? self[index] : nil
 	}
 
+	/**
+	Randomly rearranges the elements of self using the Fisher-Yates shuffle
+	*/
+	mutating func shuffle() {
+		
+		for i in self.indices.dropFirst().reverse() {
+			let j = Int.random(0, i, not: i)
+			swap(&self[i], &self[j])
+		}
+		
+	}
+	
+	/**
+	Shuffles the values of the array into a new one
+	
+	:returns: Shuffled copy of self
+	*/
+	func shuffled() -> Array {
+		var shuffled = self
+		
+		shuffled.shuffle()
+		
+		return shuffled
+	}
 }
 
 func transpose<T>(input: [[T]]) -> [[T]] {

@@ -23,8 +23,16 @@ public extension Int {
 	}
 
 	/// SwiftRandom extension
-	public static func random(lower: Int = 0, _ upper: Int = 100) -> Int {
-		return lower + Int(arc4random_uniform(UInt32(upper - lower + 1)))
+	public static func random(lower: Int = 0, _ upper: Int = 100, not: Int? = nil) -> Int {
+		guard let not = not else {
+  		return lower + Int(arc4random_uniform(UInt32(upper - lower + 1)))
+		}
+		
+  	let r = lower + Int(arc4random_uniform(UInt32(upper - lower + 1)))
+		
+		guard r != not else { return random(lower, upper, not: not) }
+		
+		return r
 	}
 }
 

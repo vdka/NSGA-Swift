@@ -10,21 +10,49 @@ protocol Genetic {
 	var reals: [Double] { get set }
 }
 
-func crossoverReals<U>(chance: Double, parentsReals: ([U], [U])) -> ([U], [U]) {
+extension Double {
+	/**
+	Simulated binary crossover for two real numbers, output will have the same average, provided the
+	values generated lay within the bounds.
 	
-	guard parentsReals.0.count == parentsReals.1.count else { fatalError() }
-	guard Bool.random(chance) else { return parentsReals }
+	- parameter other:      The other Real number
+	- parameter eta:        A value representing the inverse of the _power_ of crossover.
+	- parameter lowerBound: The lower limit for generated values
+	- parameter upperBound: The upper limit for generated values
 	
-	var (pa, pb) = parentsReals
-	var (ca, cb): ([U], [U]) = ([], [])
-	
-	let splitIndex = Int.random(1, parentsReals.0.endIndex - 1)
-	
-	let (aa, ab) = (Array(pa[0..<splitIndex]), Array(pa[splitIndex..<pa.endIndex]))
-	let (ba, bb) = (Array(pb[0..<splitIndex]), Array(pb[splitIndex..<pb.endIndex]))
-	
-	ca = aa + bb
-	cb = ba + ab
-	
-	return (ca, cb)
+	- returns: Returns the crossed over values.
+	*/
+	func crossover(with other: Double, eta: Double, lowerBound: Double, upperBound: Double) -> (Double, Double) {
+		guard abs(self - other) > 0 else { return (self, other) }
+		
+		let y1 = min(self, other)
+		let y2 = max(self, other)
+		
+		let rand = Double.random(0, 1)
+		
+		var beta = 1.0 + (2.0 * (y1 - lowerBound) / (y2 - y1))
+		var alpha = 2.0 - (beta ** -(eta + 1.0))
+		
+		var betaq: Double
+		if rand <= (1.0 / alpha) {
+			betaq = (rand * alpha) ** (1.0 / (eta + 1.0))
+		} else {
+			betaq = (1.0 / (2.0 - rand * alpha)) ** (1.0 / (eta + 1.0))
+		}
+		
+		let c1 = (0.5 * ((y1 + y2) - betaq * (y2 - y1))).clamp(min: lowerBound, max: upperBound)
+		beta = 1.0 + (2.0 * (upperBound - y2) / (y2 - y1))
+		alpha = 2.0 - (beta ** -(eta + 1.0))
+		
+		if rand <= (1.0 / alpha) {
+			betaq = (rand * alpha) ** (1.0 / (eta + 1.0))
+		} else {
+			betaq = (1.0 / (2.0 - rand * alpha)) ** (1.0 / (eta + 1.0))
+		}
+		
+		let c2 = (0.5 * ((y1 + y2) + betaq * (y2 - y1))).clamp(min: lowerBound, max: upperBound)
+		
+		return (c1, c2)
+		
+	}
 }

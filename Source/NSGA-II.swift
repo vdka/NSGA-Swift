@@ -6,139 +6,155 @@
 //  Copyright © 2015 Ethan Jackwitz. All rights reserved.
 //
 
-//enum ConfigurationError: ErrorType {
-//	case
-//}
+var hashArray: [Int] = Array(0..<100_000)
 
-var hashArray: [Int] = (0..<Int.max).reverse()
-
-struct Configuration {
-	let nObjectives: Int
-	let nConstraints: Int
-
-	let nReal: Int
-	let nBinary: Int
-
-	///Min value of real[i]
-	let minReal: [Double]
-	///Max value of real[i]
-	let maxReal: [Double]
-
-	///Number of bits for binary[i]
-	let nBits: [Int]
-
-	///Min value of binary[i]
-	let minBinary: [Double]
-	///Max value of binary[i]
-	let maxBinary: [Double]
-
-	let realCrossoverChance: Double
-	let realMutationChance: Double
-
-	let binaryCrossOverChance: Double
-	let binaryMutationChance: Double
+protocol IndividualType: Hashable, Rankable, CrowdingAssignable, Genetic {
+	init()
+	init(reals: [Double])
 }
 
-enum GenerationMethod {
-	case Random
-	case Offspring(Individual, Individual)
+extension IndividualType {
+  func dominates<I: IndividualType>(other: I) -> Bool? {
+  	var (flagOurs, flagTheirs) = (false, false)
+  	zip(self.obj, other.obj).forEach { ours, theirs in
+  		if ours < theirs { flagOurs = true }
+  		if ours > theirs { flagTheirs = true }
+  	}
+  	
+  	switch (flagOurs, flagTheirs) {
+  	case (true, false): return true
+  	case (false, true): return false
+  	default: return .None
+  	}
+  }
 }
 
-struct Individual: Equatable, Hashable {
-	let hashValue: Int = hashArray.popLast()!
-	var rank: Int
-	var constraintViolation: Double
-	/// The variables representable as real numbers
-	var reals: [Double]
-	var minReal: [Double]
-	var maxReal: [Double]
-	/// The variables representable as binary numbers (genes)
-	var genes: [[Bool]]
-	var binary: [Double]
-	var minBinary: [Double]
-	var maxBinary: [Double]
-	var obj: [Double]
-	var constraint: [Double]
-	var crowdingDistance: Double
 
-	init(config: Configuration) {
-		self.reals = []
-		self.binary = []
-		self.minBinary = config.minBinary
-		self.maxBinary = config.maxBinary
-		self.minReal = config.minReal
-		self.maxReal = config.maxReal
-		self.genes = [[]]
-		self.rank = 0
-		self.constraintViolation = 0.0
-		self.obj = []
-		self.constraint = []
-		self.crowdingDistance = 0.0
-	}
-
-	static func random(config: Configuration) -> Individual {
-		let reals = (0..<config.nReal)
-			.map({ _ in Double.random() })
-
-		let genes = (0..<config.nBinary)
-			.map({
-				(0..<config.nBits[$0]).map({ _ in Bool.random() })
-			})
-
-		var randomIndividual = Individual(config: config)
-		randomIndividual.reals = reals
-		randomIndividual.genes = genes
-
-		return randomIndividual
-	}
-
-	mutating func decode() {
-		if genes.count != 0 {
-			for (geneIndex, gene) in genes.enumerate() {
-				var sum: Int = 0
-				for (index, val) in gene.enumerate() where val == true {
-					sum += 2 ** (gene.count - 1 - index)
-				}
-
-				binary[geneIndex] = minBinary[geneIndex]
-					+ Double(sum) * (maxBinary[geneIndex] - minBinary[geneIndex])
-					/ Double(2 ** (gene.count - 1))
-			}
-		}
-	}
-}
-
-extension Individual: Rankable {
-	func dominates(other: Individual) -> Bool? {
-		var (flagOurs, flagTheirs) = (false, false)
-		zip(self.obj, other.obj).forEach { ours, theirs in
-			if ours < theirs { flagOurs = true }
-			if ours > theirs { flagTheirs = true }
-		}
-
-		switch (flagOurs, flagTheirs) {
-		case (true, false): return true
-		case (false, true): return false
-		default: return .None
-		}
-	}
-}
-
-func == (lhs: Individual, rhs: Individual) -> Bool {
+func ==<I: IndividualType>(lhs: I, rhs: I) -> Bool {
 	return lhs.hashValue == rhs.hashValue
 }
 
-struct Population {
-	var individuals: [Individual] = []
+protocol ProblemType {
+	static func evaluate(reals: [Double]?, bins: [Double]?) -> [Double]
+	
+	static var config: Configuration { get }
+}
 
-	let size: Int
+//public class SimpleEngine<I : IndividualType> : Engine {
+//	
+//	//These type definitions have to be repeated here, even though we already
+//	//described them in Engine :( Not sure why...
+//	//TODO: find out why
+//	
+//	//MARK: Engine
+//	typealias Individual = I
 
-	init(size: Int, individualConfig: Configuration, random: Bool = false) {
-		self.size = size
-		if random {
-			individuals = (0..<size)
-				.map({ _ in Individual.random(individualConfig) })
+struct NSGAII<Individual: IndividualType, Problem: ProblemType> {
+	
+  typealias Population = [Individual]
+	
+	/**
+	Creates offspring for a given population of _parents_.
+	n offsping are created where n is the number of parents.
+	
+	- parameter parent: parent is the population of individuals with which we generate offspring.
+	
+	- returns: A population that represents the next _generation_ of Individuals
+	*/
+	func evolve(parent: Population) -> Population {
+		guard parent.count % 4 == 0 else { fatalError("Sorry population sizes must be a multiple of 4") }
+		let orderA = Array(parent.indices).shuffled().map({ parent[$0] })
+		let orderB = Array(parent.indices).shuffled().map({ parent[$0] })
+		
+		var offspring: Population = []
+		offspring.reserveCapacity(parent.count)
+		
+		for i in 0.stride(to: parent.endIndex, by: 4) {
+			
+			let parent1 = tournamentSelection(orderA[i], orderA[i + 1])
+  		let parent2 = tournamentSelection(orderA[i + 2], orderA[i + 3])
+			let (child1, child2) = generateOffspring(parent: parent1, parent: parent2)
+			
+			let parent3 = tournamentSelection(orderB[i], orderB[i + 1])
+  		let parent4 = tournamentSelection(orderB[i + 2], orderB[i + 3])
+			let (child3, child4) = generateOffspring(parent: parent3, parent: parent4)
+			
+			offspring += [child1, child2, child3, child4]
+		}
+		
+		return offspring
+	}
+	
+	func evaluateAndUpdate(inout population: Population) {
+		
+		for i in population.indices {
+			population[i].obj = Problem.evaluate(population[i].reals, bins: .None)
 		}
 	}
+	
+	func run(generations nGenerations: Int = 20, popSize: Int = 20) -> Population {
+		
+		Configuration.current = Problem.config
+		Configuration.current.popSize = popSize
+		
+		var population: Population = Population.init(count: Configuration.current.popSize, repeatedFunction: { return Individual() })
+		
+		evaluateAndUpdate(&population)
+		
+		for _ in (0..<nGenerations) {
+			var offspring = evolve(population)
+			
+			evaluateAndUpdate(&offspring)
+			
+			population = best(Configuration.current.popSize, from: offspring + population)
+			
+			//DEBUG
+			
+			let dominance = assignDominance(population)
+			let bestFront = assignFronts(dominance).first!
+			
+			print(bestFront)
+    }
 
+		return population
+	}
+	
 }
+
+struct Simple: IndividualType, CustomStringConvertible {
+	var reals: [Double] = []
+	var obj: [Double] = []
+	var hashValue: Int = hashArray.popLast()!
+	
+	init() {
+		for i in 0..<Configuration.current.nReal {
+			let r = Double.random(Configuration.current.minReal[i], Configuration.current.maxReal[i])
+			self.reals.append(r)
+		}
+	}
+	
+	init(reals: [Double]) {
+		guard reals.count == Configuration.current.nReal else { fatalError() }
+		self.reals = reals
+	}
+	
+	var description: String {
+		var str = "(\(obj.first!.roundToPlaces(2))"
+		for o in obj.dropFirst() {
+			str = str + ", \(o.roundToPlaces(2))"
+		}
+		
+		return str + ")"
+	}
+}
+
+import Darwin
+
+extension Double {
+	/// Rounds the double to decimal places value
+	func roundToPlaces(places:Int) -> Double {
+		let divisor = 10.0 ** Double(places)
+		return round(self * divisor) / divisor
+	}
+}
+

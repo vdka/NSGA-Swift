@@ -8,7 +8,7 @@
 
 //NOTE (ethan): this should be `{ get set }`
 protocol CrowdingAssignable {
-	var obj: [Double] { get }
+	var obj: [Double] { get set }
 }
 
 /**
@@ -29,7 +29,6 @@ func crowdingDistance<U: CrowdingAssignable>(front: [U]) -> [Double] {
 		let sortedPairs = objValues.enumerate().sort({ $0.element < $1.element })
 
 		let range = objValues.maxElement()! - objValues.minElement()!
-		guard range != 0 else { fatalError() }
 
 		for (index, pair) in sortedPairs.enumerate() {
 			guard let prev = sortedPairs[safe: index - 1]?.element,
@@ -38,6 +37,8 @@ func crowdingDistance<U: CrowdingAssignable>(front: [U]) -> [Double] {
 				crowding[pair.index] = Double.infinity
 				continue
 			}
+			
+  		guard range != 0 else { continue }
 			
 			let c = abs((next - prev) / range)
 

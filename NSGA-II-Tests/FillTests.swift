@@ -8,9 +8,15 @@
 
 import XCTest
 
-struct Point {
+struct Point: CrowdingAssignable {
 	var x: UInt8
 	var y: UInt8
+	var obj: [Double]
+	init(x: UInt8, y: UInt8) {
+		self.x = x
+		self.y = y
+		self.obj = [Double(x), Double(y)]
+	}
 }
 
 extension Point: Hashable {
@@ -37,12 +43,6 @@ extension Point: Rankable {
 		case (false, true): return false
 		default: return .None
 		}
-	}
-}
-
-extension Point: CrowdingAssignable {
-	var obj: [Double] {
-		return [Double(x), Double(y)]
 	}
 }
 

@@ -9,19 +9,19 @@
 import XCTest
 
 class CrossoverTests: XCTestCase {
-
-    func testCrossover() {
-			let input = ([1, 2, 3, 4], [5, 6, 7, 8])
-			var r = crossoverReals(1.0, parentsReals: input)
-			
-			XCTAssert(Set(r.0 + r.1) == Set(input.0 + input.1))
-			XCTAssert(r.0 != input.0)
-			XCTAssert(r.1 != input.1)
-			
-			r = crossoverReals(0.0, parentsReals: input)
-			
-			XCTAssert(r.0 == input.0)
-			XCTAssert(r.1 == input.1)
-    }
 	
+	func testCrossover() {
+		let a = 9.0
+		let b = 11.0
+		let (c, d) = a.crossover(with: b, eta: 20.0, lowerBound: 0.0, upperBound: 20.0)
+		
+		// Check that the crossover actually changes the value
+		XCTAssert(a != c)
+		XCTAssert(a != d)
+		XCTAssert(b != c)
+		XCTAssert(b != d)
+		// compute the averages, and assert that they are the same before and after.
+		XCTAssert([a, b].reduce(0.0, combine: +) / 2.0 == [c, d].reduce(0.0, combine: +) / 2.0)
+	}
+
 }

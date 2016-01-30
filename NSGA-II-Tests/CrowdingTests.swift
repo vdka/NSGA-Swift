@@ -31,10 +31,6 @@ extension CollectionType where SubSequence.Generator.Element == Generator.Elemen
 	}
 }
 
-extension CGPoint: CrowdingAssignable {
-	var obj: [Double] { return [Double(x), Double(y)] }
-}
-
 class CrowdingTests: XCTestCase {
 
 	func testFollows() {
@@ -47,20 +43,20 @@ class CrowdingTests: XCTestCase {
 	
 	func testCrowding() {
 
-		let f: (Double) -> CGPoint = {
-			let x = Double($0)
-			return CGPoint(x: x, y: x * x)
+		let f: (Int) -> Point = {
+			let x = UInt8($0)
+			return Point(x: x, y: x * x)
 		}
-
-		let population: [CGPoint] = 0.0.stride(to: 10, by: 1).map(f).reverse()
-
+		
+		let population = 0.stride(through: 15, by: 1).map({ f($0) })
+		
 		let dist = crowdingDistance(population)
 
 		XCTAssert(dist.first! == Double.infinity)
 		XCTAssert(dist.last! == Double.infinity)
-		XCTAssert(dist.dropFirst().dropLast().follows(>=))
+		XCTAssert(dist.dropFirst().dropLast().follows(<=))
 		
-		let points = [(20, 6), (14, 7), (10, 8), (9, 9), (8, 10), (7, 14), (6, 20)].map({ CGPoint(x: $0.0, y: $0.1) })
+		let points = [(20, 6), (14, 7), (10, 8), (9, 9), (8, 10), (7, 14), (6, 20)].map({ Point(x: $0.0, y: $0.1) })
 		
 		let dist2 = crowdingDistance(points)
 		
