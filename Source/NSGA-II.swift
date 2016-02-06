@@ -40,15 +40,6 @@ protocol ProblemType {
 	static var config: Configuration { get }
 }
 
-//public class SimpleEngine<I : IndividualType> : Engine {
-//	
-//	//These type definitions have to be repeated here, even though we already
-//	//described them in Engine :( Not sure why...
-//	//TODO: find out why
-//	
-//	//MARK: Engine
-//	typealias Individual = I
-
 struct NSGAII<Individual: IndividualType, Problem: ProblemType> {
 	
   typealias Population = [Individual]

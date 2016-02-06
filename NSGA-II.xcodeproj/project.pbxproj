@@ -10,6 +10,7 @@
 		AA05BFF71C5B98AF00B27A79 /* Offspring.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA05BFF61C5B98AF00B27A79 /* Offspring.swift */; };
 		AA05BFF91C5CDCC000B27A79 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA05BFF81C5CDCC000B27A79 /* Configuration.swift */; };
 		AA05BFFA1C5CDCC000B27A79 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA05BFF81C5CDCC000B27A79 /* Configuration.swift */; };
+		AA06F2591C658CE300CC6774 /* WaterModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA06F2581C658CE300CC6774 /* WaterModel.swift */; };
 		AA2E749E1C59772A00CF1982 /* Random.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA43E2211C55E0A700554E04 /* Random.swift */; };
 		AA32A63F1C3299BD00035F84 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA32A63E1C3299B300035F84 /* main.swift */; };
 		AA32A6411C329A6700035F84 /* NSGA-II.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA32A6401C329A6700035F84 /* NSGA-II.swift */; };
@@ -52,6 +53,7 @@
 /* Begin PBXFileReference section */
 		AA05BFF61C5B98AF00B27A79 /* Offspring.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Offspring.swift; sourceTree = "<group>"; };
 		AA05BFF81C5CDCC000B27A79 /* Configuration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
+		AA06F2581C658CE300CC6774 /* WaterModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WaterModel.swift; path = Models/WaterModel.swift; sourceTree = "<group>"; };
 		AA32A6331C32997700035F84 /* NSGA-II */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "NSGA-II"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA32A63E1C3299B300035F84 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		AA32A6401C329A6700035F84 /* NSGA-II.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSGA-II.swift"; sourceTree = "<group>"; };
@@ -92,6 +94,38 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		AA06F25B1C658EAF00CC6774 /* Problems */ = {
+			isa = PBXGroup;
+			children = (
+				AA4F135C1C4A11A300BA35AC /* ProblemDescription.swift */,
+				AA06F2581C658CE300CC6774 /* WaterModel.swift */,
+			);
+			name = Problems;
+			sourceTree = "<group>";
+		};
+		AA06F25C1C658F2700CC6774 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				AA7EE02C1C4A2EC2005615CF /* Ranking.swift */,
+				AA7EE0451C4B6E16005615CF /* Crowding.swift */,
+				AA43E22D1C55F65900554E04 /* Tournament.swift */,
+				AA43E2301C57112900554E04 /* Crossover.swift */,
+				AA05BFF61C5B98AF00B27A79 /* Offspring.swift */,
+				AA7EE0481C4DC6BB005615CF /* Fill.swift */,
+				AA43E2351C5751E700554E04 /* Mutation.swift */,
+			);
+			name = Components;
+			sourceTree = "<group>";
+		};
+		AA06F25D1C658F3F00CC6774 /* NSGA-II-Engine */ = {
+			isa = PBXGroup;
+			children = (
+				AA32A6401C329A6700035F84 /* NSGA-II.swift */,
+				AA05BFF81C5CDCC000B27A79 /* Configuration.swift */,
+			);
+			name = "NSGA-II-Engine";
+			sourceTree = "<group>";
+		};
 		AA32A62A1C32997600035F84 = {
 			isa = PBXGroup;
 			children = (
@@ -114,16 +148,9 @@
 			isa = PBXGroup;
 			children = (
 				AA32A63E1C3299B300035F84 /* main.swift */,
-				AA4F135C1C4A11A300BA35AC /* ProblemDescription.swift */,
-				AA32A6401C329A6700035F84 /* NSGA-II.swift */,
-				AA05BFF81C5CDCC000B27A79 /* Configuration.swift */,
-				AA7EE02C1C4A2EC2005615CF /* Ranking.swift */,
-				AA7EE0451C4B6E16005615CF /* Crowding.swift */,
-				AA43E22D1C55F65900554E04 /* Tournament.swift */,
-				AA43E2301C57112900554E04 /* Crossover.swift */,
-				AA05BFF61C5B98AF00B27A79 /* Offspring.swift */,
-				AA7EE0481C4DC6BB005615CF /* Fill.swift */,
-				AA43E2351C5751E700554E04 /* Mutation.swift */,
+				AA06F25D1C658F3F00CC6774 /* NSGA-II-Engine */,
+				AA06F25B1C658EAF00CC6774 /* Problems */,
+				AA06F25C1C658F2700CC6774 /* Components */,
 				AA43E21F1C55E0A700554E04 /* Misc */,
 			);
 			path = Source;
@@ -258,6 +285,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AA32A6411C329A6700035F84 /* NSGA-II.swift in Sources */,
+				AA06F2591C658CE300CC6774 /* WaterModel.swift in Sources */,
 				AA43E2241C55E0A700554E04 /* Random.swift in Sources */,
 				AA43E22E1C55F65900554E04 /* Tournament.swift in Sources */,
 				AA32A63F1C3299BD00035F84 /* main.swift in Sources */,
