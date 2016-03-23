@@ -43,3 +43,41 @@ extension Double {
 		return ret
 	}
 }
+
+extension Float {
+	func clamp(min min: Float, max: Float) -> Float {
+		if self < min { return min }
+		if self > max { return max }
+		return self
+	}
+	
+	/**
+	Mutate a real number using polynomial distribution.
+	
+	- parameter eta:        A representing the inverse of the _power_ of mutation.
+	- parameter lowerBound: The lower limit to mutate too.
+	- parameter upperBound: The upper limit to mutate too.
+	
+	- returns: The mutated value.
+	*/
+	func mutate(eta eta: Float = 20.0, lowerBound: Float, upperBound: Float) -> Float {
+		
+		let delta1 = (self - lowerBound) / (upperBound - lowerBound)
+		let delta2 = (upperBound - self) / (upperBound - lowerBound)
+		let power = 1.0 / (eta + 1.0)
+		let rnd = Float.random(0, 1)
+		let deltaq: Float
+		if Bool.random() {
+			let xy = 1.0 - delta1
+			let val = 2.0 * rnd + (1.0 - 2.0 * rnd) * (xy ** (eta + 1.0))
+			deltaq = (val ** power) - 1.0
+		} else {
+			let xy = 1.0 - delta2
+			let val = 2.0 * (1.0 - rnd) + 2.0 * (rnd - 0.5) * (xy ** (eta + 1.0))
+			deltaq = 1.0 - (val ** power)
+		}
+		let ret = (self + deltaq * (upperBound - lowerBound)).clamp(min: lowerBound, max: upperBound)
+		
+		return ret
+	}
+}

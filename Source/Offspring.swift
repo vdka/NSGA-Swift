@@ -9,14 +9,14 @@
 func generateOffspring<Individual: IndividualType>(parent a: Individual, parent b: Individual) -> (Individual, Individual) {
 	
 	let (mutationChance, crossoverChance, eta) = (Configuration.current.mutationChance, Configuration.current.crossoverChance, Configuration.current.eta)
-	var (c1Reals, c2Reals): ([Double], [Double]) = ([], [])
+	var (c1Reals, c2Reals): ([F], [F]) = ([], [])
 	let performCrossover = Bool.random(crossoverChance)
 		
 	for index in a.reals.indices {
 		let (a, b) = (a.reals[index], b.reals[index])
 		let (lower, upper) = (Configuration.current.minReal[index], Configuration.current.maxReal[index])
 		
-		let (c, d): (Double, Double)
+		let (c, d): (F, F)
 		if performCrossover {
 			(c, d) = a.crossover(with: b, eta: eta, lowerBound: lower, upperBound: upper)
 		} else {

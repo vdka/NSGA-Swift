@@ -8,6 +8,14 @@
 
 import Darwin
 
+extension F {
+	/// Rounds the double to decimal places value
+	func roundToPlaces(places:Int) -> F {
+		let divisor = 10.0 ** F(places)
+		return round(self * divisor) / divisor
+	}
+}
+
 extension Array {
 	subscript (safe index: Int) -> Generator.Element? {
 		return indices ~= index ? self[index] : nil
@@ -37,6 +45,11 @@ extension Array {
 		
 		return shuffled
 	}
+	
+	func repeated(n: UInt) -> [Element] {
+		guard self.count == 1 else { fatalError("Implementation limited to single element arrays") }
+		return Array.init(count: Int(n), repeatedValue: first!)
+	}
 }
 
 func transpose<T>(input: [[T]]) -> [[T]] {
@@ -60,6 +73,10 @@ func **(base: Int, exponent: Int) -> Int {
 
 func **(base: Double, exponent: Double) -> Double {
 	return pow(base, exponent)
+}
+
+func **(base: Float, exponent: Float) -> Float {
+	return powf(base, exponent)
 }
 
 extension Dictionary {

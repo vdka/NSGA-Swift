@@ -6,43 +6,22 @@
 //  Copyright © 2015 Ethan Jackwitz. All rights reserved.
 //
 
-var hashArray: [Int] = Array(0..<100_000)
-
-protocol IndividualType: Hashable, Rankable, CrowdingAssignable, Genetic {
-	init()
-	init(reals: [Double])
-}
-
-extension IndividualType {
-  func dominates<I: IndividualType>(other: I) -> Bool? {
-  	var (flagOurs, flagTheirs) = (false, false)
-  	zip(self.obj, other.obj).forEach { ours, theirs in
-  		if ours < theirs { flagOurs = true }
-  		if ours > theirs { flagTheirs = true }
-  	}
-  	
-  	switch (flagOurs, flagTheirs) {
-  	case (true, false): return true
-  	case (false, true): return false
-  	default: return .None
-  	}
-  }
-}
-
-
-func ==<I: IndividualType>(lhs: I, rhs: I) -> Bool {
-	return lhs.hashValue == rhs.hashValue
-}
-
 protocol ProblemType {
-	static func evaluate(reals: [Double]?, bins: [Double]?) -> [Double]
+	
+	associatedtype Individual: IndividualType
+	
+	static func evaluate(inout individual: Individual)
 	
 	static var config: Configuration { get }
 }
 
-struct NSGAII<Individual: IndividualType, Problem: ProblemType> {
+struct NSGAII<Problem: ProblemType> {
 	
-  typealias Population = [Individual]
+	init() {
+		Configuration.current = Problem.config
+	}
+	
+  typealias Population = [Problem.Individual]
 	
 	/**
 	Creates offspring for a given population of _parents_.
@@ -53,7 +32,6 @@ struct NSGAII<Individual: IndividualType, Problem: ProblemType> {
 	- returns: A population that represents the next _generation_ of Individuals
 	*/
 	func evolve(parent: Population) -> Population {
-		guard parent.count % 4 == 0 else { fatalError("Sorry population sizes must be a multiple of 4") }
 		let orderA = Array(parent.indices).shuffled().map({ parent[$0] })
 		let orderB = Array(parent.indices).shuffled().map({ parent[$0] })
 		
@@ -79,16 +57,17 @@ struct NSGAII<Individual: IndividualType, Problem: ProblemType> {
 	func evaluateAndUpdate(inout population: Population) {
 		
 		for i in population.indices {
-			population[i].obj = Problem.evaluate(population[i].reals, bins: .None)
+			Problem.evaluate(&population[i])
 		}
 	}
 	
 	func run(generations nGenerations: Int = 20, popSize: Int = 20) -> Population {
+		guard popSize % 4 == 0 else { fatalError("Sorry population sizes must be a multiple of 4") }
 		
 		Configuration.current = Problem.config
 		Configuration.current.popSize = popSize
 		
-		var population: Population = Population.init(count: Configuration.current.popSize, repeatedFunction: { return Individual() })
+		var population: Population = Population.init(count: Configuration.current.popSize, repeatedFunction: { return Problem.Individual() })
 		
 		evaluateAndUpdate(&population)
 		
@@ -97,55 +76,24 @@ struct NSGAII<Individual: IndividualType, Problem: ProblemType> {
 			
 			evaluateAndUpdate(&offspring)
 			
-			population = best(Configuration.current.popSize, from: offspring + population)
+			population = best(Configuration.current.popSize, from: population + offspring)
 			
-			//DEBUG
+//			population = offspring + population
+			
+//    	let dominance = assignDominance(population)
+//    	let fronts = assignFronts(dominance)
+			
+			#if DEBUG
 			
 			let dominance = assignDominance(population)
 			let bestFront = assignFronts(dominance).first!
 			
 			print(bestFront)
+			
+			#endif
     }
 
 		return population
 	}
 	
 }
-
-struct Simple: IndividualType, CustomStringConvertible {
-	var reals: [Double] = []
-	var obj: [Double] = []
-	var hashValue: Int = hashArray.popLast()!
-	
-	init() {
-		for i in 0..<Configuration.current.nReal {
-			let r = Double.random(Configuration.current.minReal[i], Configuration.current.maxReal[i])
-			self.reals.append(r)
-		}
-	}
-	
-	init(reals: [Double]) {
-		guard reals.count == Configuration.current.nReal else { fatalError() }
-		self.reals = reals
-	}
-	
-	var description: String {
-		var str = "(\(obj.first!.roundToPlaces(2))"
-		for o in obj.dropFirst() {
-			str = str + ", \(o.roundToPlaces(2))"
-		}
-		
-		return str + ")"
-	}
-}
-
-import Darwin
-
-extension Double {
-	/// Rounds the double to decimal places value
-	func roundToPlaces(places:Int) -> Double {
-		let divisor = 10.0 ** Double(places)
-		return round(self * divisor) / divisor
-	}
-}
-

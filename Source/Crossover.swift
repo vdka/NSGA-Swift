@@ -7,10 +7,10 @@
 //
 
 protocol Genetic {
-	var reals: [Double] { get set }
+	var reals: [F] { get set }
 }
 
-extension Double {
+extension F {
 	/**
 	Simulated binary crossover for two real numbers, output will have the same average, provided the
 	values generated lay within the bounds.
@@ -22,18 +22,18 @@ extension Double {
 	
 	- returns: Returns the crossed over values.
 	*/
-	func crossover(with other: Double, eta: Double, lowerBound: Double, upperBound: Double) -> (Double, Double) {
+	func crossover(with other: F, eta: F, lowerBound: F, upperBound: F) -> (F, F) {
 		guard abs(self - other) > 0 else { return (self, other) }
 		
 		let y1 = min(self, other)
 		let y2 = max(self, other)
 		
-		let rand = Double.random(0, 1)
+		let rand = F.random(0, 1)
 		
 		var beta = 1.0 + (2.0 * (y1 - lowerBound) / (y2 - y1))
 		var alpha = 2.0 - (beta ** -(eta + 1.0))
 		
-		var betaq: Double
+		var betaq: F
 		if rand <= (1.0 / alpha) {
 			betaq = (rand * alpha) ** (1.0 / (eta + 1.0))
 		} else {

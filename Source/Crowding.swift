@@ -8,7 +8,7 @@
 
 //NOTE (ethan): this should be `{ get set }`
 protocol CrowdingAssignable {
-	var obj: [Double] { get set }
+	var obj: [F] { get set }
 }
 
 /**
@@ -18,11 +18,11 @@ This function computes the _crowding distance_ for a set of coordinates
 
 - returns: The crowding distance for each point
 */
-func crowdingDistance<U: CrowdingAssignable>(front: [U]) -> [Double] {
+func crowdingDistance<U: CrowdingAssignable>(front: [U]) -> [F] {
 
 	let values = transpose(front.map({ $0.obj }))
 
-	var crowding: [Double] = Array.init(count: front.count, repeatedValue: 0.0)
+	var crowding: [F] = Array.init(count: front.count, repeatedValue: 0.0)
 
 	for objValues in values {
 
@@ -34,7 +34,7 @@ func crowdingDistance<U: CrowdingAssignable>(front: [U]) -> [Double] {
 			guard let prev = sortedPairs[safe: index - 1]?.element,
       			let next = sortedPairs[safe: index + 1]?.element
 			else {
-				crowding[pair.index] = Double.infinity
+				crowding[pair.index] = F.infinity
 				continue
 			}
 			
@@ -48,7 +48,7 @@ func crowdingDistance<U: CrowdingAssignable>(front: [U]) -> [Double] {
 	}
 
 	for index in front.indices {
-		crowding[index] = crowding[index] / Double(values.count)
+		crowding[index] = crowding[index] / F(values.count)
 	}
 
 	return crowding

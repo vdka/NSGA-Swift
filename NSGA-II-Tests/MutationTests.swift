@@ -8,14 +8,6 @@
 
 import XCTest
 
-extension Double {
-	/// Rounds the double to decimal places value
-	func roundToPlaces(places:Int) -> Double {
-		let divisor = 10.0 ** Double(places)
-		return round(self * divisor) / divisor
-	}
-}
-
 class MutationTests: XCTestCase {
 	
 	func testMutate() {
