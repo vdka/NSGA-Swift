@@ -36,3 +36,28 @@ struct SimpleIndividual: IndividualType, CustomStringConvertible {
 		return str + ")"
 	}
 }
+
+extension SimpleIndividual {
+	func dominates(other: SimpleIndividual) -> Bool? {
+		var (flagOurs, flagTheirs) = (false, false)
+		zip(zip(self.obj, other.obj), Configuration.current.optimizationDirection).forEach { pair, direction in
+			let (ours, theirs) = pair
+			
+			switch direction {
+			case .Minimize:
+				if ours < theirs { flagOurs = true }
+				if ours > theirs { flagTheirs = true }
+				
+			case .Maximize:
+				if ours > theirs { flagOurs = true }
+				if ours < theirs { flagTheirs = true }
+			}
+		}
+		
+		switch (flagOurs, flagTheirs) {
+		case (true, false): return true
+		case (false, true): return false
+		default: return .None
+		}
+	}
+}

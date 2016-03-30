@@ -64,6 +64,8 @@ struct NSGAII<Problem: ProblemType> {
 	func run(generations nGenerations: Int = 20, popSize: Int = 20) -> Population {
 		guard popSize % 4 == 0 else { fatalError("Sorry population sizes must be a multiple of 4") }
 		
+		hashArray = Array(0..<nGenerations * popSize + popSize)
+		
 		Configuration.current = Problem.config
 		Configuration.current.popSize = popSize
 		
@@ -71,7 +73,7 @@ struct NSGAII<Problem: ProblemType> {
 		
 		evaluateAndUpdate(&population)
 		
-		for _ in (0..<nGenerations) {
+		for i in (0..<nGenerations) {
 			var offspring = evolve(population)
 			
 			evaluateAndUpdate(&offspring)
@@ -83,12 +85,14 @@ struct NSGAII<Problem: ProblemType> {
 //    	let dominance = assignDominance(population)
 //    	let fronts = assignFronts(dominance)
 			
+			print("End of generation \(i)")
+			
 			#if DEBUG
 			
-			let dominance = assignDominance(population)
-			let bestFront = assignFronts(dominance).first!
-			
-			print(bestFront)
+  			let dominance = assignDominance(population)
+  			let bestFront = assignFronts(dominance).first!
+				
+				print(bestFront.reduce("", combine: { str, ind in str + (ind as! Water.ConstrainedIndividual).description + "\n" } ))
 			
 			#endif
     }

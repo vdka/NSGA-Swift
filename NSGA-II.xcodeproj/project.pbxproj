@@ -30,7 +30,7 @@
 		AA7EE0491C4DC6BB005615CF /* Fill.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA7EE0481C4DC6BB005615CF /* Fill.swift */; };
 		AA7EE04A1C4DC6BB005615CF /* Fill.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA7EE0481C4DC6BB005615CF /* Fill.swift */; };
 		AA7EE04D1C4DC703005615CF /* FillTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA7EE04B1C4DC703005615CF /* FillTests.swift */; };
-		AAA6E0BD1CA2C8820098F82A /* ConstrainedIndivual.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAA6E0BC1CA2C8820098F82A /* ConstrainedIndivual.swift */; };
+		AA9B51C21CABBAC00005788F /* WaterProblemOld.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA9B51C11CABBAC00005788F /* WaterProblemOld.swift */; };
 		AAA6E0BF1CA2C8970098F82A /* SimpleIndividual.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAA6E0BE1CA2C8970098F82A /* SimpleIndividual.swift */; };
 		AAAB8DE61C8AEE56006245F2 /* GenericIndividual.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAAB8DE51C8AEE56006245F2 /* GenericIndividual.swift */; };
 		AAAB8DE71C8AEE56006245F2 /* GenericIndividual.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAAB8DE51C8AEE56006245F2 /* GenericIndividual.swift */; };
@@ -74,7 +74,7 @@
 		AA7EE0451C4B6E16005615CF /* Crowding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Crowding.swift; sourceTree = "<group>"; };
 		AA7EE0481C4DC6BB005615CF /* Fill.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Fill.swift; sourceTree = "<group>"; };
 		AA7EE04B1C4DC703005615CF /* FillTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FillTests.swift; sourceTree = "<group>"; };
-		AAA6E0BC1CA2C8820098F82A /* ConstrainedIndivual.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConstrainedIndivual.swift; sourceTree = "<group>"; };
+		AA9B51C11CABBAC00005788F /* WaterProblemOld.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WaterProblemOld.swift; sourceTree = "<group>"; };
 		AAA6E0BE1CA2C8970098F82A /* SimpleIndividual.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleIndividual.swift; sourceTree = "<group>"; };
 		AAAB8DE51C8AEE56006245F2 /* GenericIndividual.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GenericIndividual.swift; sourceTree = "<group>"; };
 		AAB95CFC1C8089FD00D0F466 /* Package.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = SOURCE_ROOT; };
@@ -107,6 +107,7 @@
 			children = (
 				AA4F135C1C4A11A300BA35AC /* GenericProblems.swift */,
 				AAB95D271C80906F00D0F466 /* WaterProblem.swift */,
+				AA9B51C11CABBAC00005788F /* WaterProblemOld.swift */,
 			);
 			name = Problems;
 			sourceTree = "<group>";
@@ -132,7 +133,6 @@
 				AA05BFF81C5CDCC000B27A79 /* Configuration.swift */,
 				AAAB8DE51C8AEE56006245F2 /* GenericIndividual.swift */,
 				AAA6E0BE1CA2C8970098F82A /* SimpleIndividual.swift */,
-				AAA6E0BC1CA2C8820098F82A /* ConstrainedIndivual.swift */,
 			);
 			name = "NSGA-II-Engine";
 			sourceTree = "<group>";
@@ -307,12 +307,12 @@
 				AA05BFF91C5CDCC000B27A79 /* Configuration.swift in Sources */,
 				AA7EE02D1C4A2EC2005615CF /* Ranking.swift in Sources */,
 				AAAB8DE61C8AEE56006245F2 /* GenericIndividual.swift in Sources */,
-				AAA6E0BD1CA2C8820098F82A /* ConstrainedIndivual.swift in Sources */,
 				AA7EE0491C4DC6BB005615CF /* Fill.swift in Sources */,
 				AA7EE0461C4B6E16005615CF /* Crowding.swift in Sources */,
 				AA4F135D1C4A11A300BA35AC /* GenericProblems.swift in Sources */,
 				AA05BFF71C5B98AF00B27A79 /* Offspring.swift in Sources */,
 				AA43E2361C5751E700554E04 /* Mutation.swift in Sources */,
+				AA9B51C21CABBAC00005788F /* WaterProblemOld.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
