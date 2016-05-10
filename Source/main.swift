@@ -6,42 +6,20 @@
 //  Copyright © 2015 Ethan Jackwitz. All rights reserved.
 //
 
-import Foundation
 
-public func measure(iterations: UInt = 1, forBlock block: () -> Void) -> Double {
-	precondition(iterations > 0, "Iterations must be a positive integer")
-	
-	var total : Double = 0
-	var samples = [Double]()
-	
-	for _ in 0..<iterations{
-		let start = NSDate.timeIntervalSinceReferenceDate()
-		block()
-		let took = Double(NSDate.timeIntervalSinceReferenceDate() - start)
-		
-		samples.append(took)
-		
-		total += took
-	}
-	
-	let mean = total / Double(iterations)
-	
-	return mean
+var basePath = "/Users/Ethan/Source/vdka/NSGA-swift/"
+var evaluatorBasePath = basePath + "datafiles/"
+
+let fileList = ["average", "averageUnconstr", "dry", "dryUnconstr", "wet", "wetUnconstr"]
+
+var evaluatorFile = ""
+
+var resultsPath = basePath + "results/"
+
+for file in fileList {
+  let nsgaii = NSGAII<Water>()
+  evaluatorFile = evaluatorBasePath + file + ".dat"
+  let results = nsgaii.run(generations: 999, popSize: 100)
+  writeStringToFile(nsgaii.archive.toCSV(), path: resultsPath + file + ".csv")
+  nsgaii.archive.toCSV()
 }
-
-//let crops: [Double] = [10000.0].repeated(15)
-//let months: [Double] = [2000.0].repeated(12)
-
-let nsgaii = NSGAII<Water>()
-
-let results = nsgaii.run(generations: 5, popSize: 16)
-
-let validResults = results.filter({ $0.constraintViolation == 0 })
-
-guard !validResults.isEmpty else {
-	print("No valid results found!")
-	exit(EXIT_FAILURE)
-}
-
-let resultString = validResults.reduce("", combine: { str, ind in [str, ind.stats, " ", ind.description, "\n"].joinWithSeparator("") } )
-print(resultString)

@@ -16,22 +16,27 @@ protocol Rankable: Hashable {
 	func dominates(other: Self) -> Bool?
 }
 
-//TODO (ethan): switch from dict to tuple
 func assignDominance<U: Rankable>(individuals: [U]) -> [U: Int] {
-	var domination: [U: Int] = Dictionary.init(individuals.map({ ($0, 0) }))
+  
+  // This ends up being faster than working with an actual dictionary.
+  var domination: [(U, Int)] = individuals.map({ ($0, 0) })
 
-	for individual in individuals {
+	for (i, individual) in individuals.enumerate() {
 		for otherIndividual in individuals
-			where individual != otherIndividual && individual.dominates(otherIndividual) == false
+			where individual.dominates(otherIndividual) == false && individual != otherIndividual
 		{
-				domination[individual]! += 1
+      domination[i].1 += 1
 		}
 	}
+  
+  var dict = [U: Int](minimumCapacity: individuals.count)
+  domination.forEach({ dict[$0.0] = $0.1 })
 
-	return domination
+	return dict
 }
 
 func assignFronts<U: Rankable>(individualsWithDominance: [U: Int]) -> [[U]] {
+  
 	var individualsWithDominance = individualsWithDominance
 
 	var unAssigned = Set(individualsWithDominance.keys)

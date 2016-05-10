@@ -12,8 +12,8 @@ struct MOP1: ProblemType {
 	typealias Individual = SimpleIndividual
 	static func evaluate(inout individual: Individual) {
 		let x = individual.reals.first!
-		individual.reals[0] = x ** 2
-		individual.reals[1] = (x - 2) ** 2
+		individual.obj.append(x ** 2)
+		individual.obj.append((x - 2) ** 2)
 	}
 	
 	static var config: Configuration {

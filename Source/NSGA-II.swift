@@ -13,15 +13,23 @@ protocol ProblemType {
 	static func evaluate(inout individual: Individual)
 	
 	static var config: Configuration { get }
+  
+  static var columnNames: [String] { get }
 }
 
-struct NSGAII<Problem: ProblemType> {
+extension ProblemType {
+  static var columnNames: [String] { return [] }
+}
+
+class NSGAII<Problem: ProblemType> {
 	
 	init() {
 		Configuration.current = Problem.config
 	}
 	
   typealias Population = [Problem.Individual]
+	
+	var archive = Archive<Problem>()
 	
 	/**
 	Creates offspring for a given population of _parents_.
@@ -62,40 +70,31 @@ struct NSGAII<Problem: ProblemType> {
 	}
 	
 	func run(generations nGenerations: Int = 20, popSize: Int = 20) -> Population {
-		guard popSize % 4 == 0 else { fatalError("Sorry population sizes must be a multiple of 4") }
+		guard popSize % 4 == 0 else { fatalError("Population sizes must be a multiple of 4") }
 		
-		hashArray = Array(0..<nGenerations * popSize + popSize)
-		
-		Configuration.current = Problem.config
 		Configuration.current.popSize = popSize
 		
-		var population: Population = Population.init(count: Configuration.current.popSize, repeatedFunction: { return Problem.Individual() })
+		var population = Population(count: Configuration.current.popSize, repeatedFunction: Problem.Individual.init)
 		
 		evaluateAndUpdate(&population)
 		
-		for i in (0..<nGenerations) {
+		for _ in (0..<nGenerations) {
 			var offspring = evolve(population)
 			
 			evaluateAndUpdate(&offspring)
+      
+    	let dominance = assignDominance(population + offspring)
+    	let fronts = assignFronts(dominance)
+      
+      // TODO: resolve issues surrounding this first.
+//			archive.insert(front: fronts.first!)
 			
-			population = best(Configuration.current.popSize, from: population + offspring)
-			
-//			population = offspring + population
-			
-//    	let dominance = assignDominance(population)
-//    	let fronts = assignFronts(dominance)
-			
-			print("End of generation \(i)")
-			
-			#if DEBUG
-			
-  			let dominance = assignDominance(population)
-  			let bestFront = assignFronts(dominance).first!
-				
-				print(bestFront.reduce("", combine: { str, ind in str + (ind as! Water.ConstrainedIndividual).description + "\n" } ))
-			
-			#endif
+			population = best(Configuration.current.popSize, from: fronts)
     }
+    
+  	let dominance = assignDominance(population)
+  	let fronts = assignFronts(dominance)
+		archive.insert(front: fronts.first!)
 
 		return population
 	}

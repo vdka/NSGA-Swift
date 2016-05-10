@@ -44,13 +44,13 @@ extension Double {
 	}
 }
 
+extension Comparable {
+  func clamp(lower lower: Self, upper: Self) -> Self {
+    return min(max(self, lower), upper)
+  }
+}
+
 extension Float {
-	func clamp(min min: Float, max: Float) -> Float {
-		if self < min { return min }
-		if self > max { return max }
-		return self
-	}
-	
 	/**
 	Mutate a real number using polynomial distribution.
 	
@@ -76,7 +76,7 @@ extension Float {
 			let val = 2.0 * (1.0 - rnd) + 2.0 * (rnd - 0.5) * (xy ** (eta + 1.0))
 			deltaq = 1.0 - (val ** power)
 		}
-		let ret = (self + deltaq * (upperBound - lowerBound)).clamp(min: lowerBound, max: upperBound)
+    let ret = (self + deltaq * (upperBound - lowerBound)).clamp(lower: lowerBound, upper: upperBound)
 		
 		return ret
 	}

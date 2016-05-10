@@ -8,14 +8,20 @@
 
 import Foundation
 
-var hashArray: [Int] = []
+var _counter: Int = 0
+
+var counter: Int {
+  let c = _counter
+  defer { _counter = _counter.successor() }
+  return _counter
+}
 
 /**
 `Rankable` requires `func dominates(other: Self) -> Bool?`
 `CrowdingAssignable` provides `obj` or scores
 `Genetic` provides `reals` or variables
 */
-protocol IndividualType: Hashable, Rankable, CrowdingAssignable, Genetic {
+protocol IndividualType: Hashable, Rankable, CrowdingAssignable, Genetic, CustomStringConvertible {
 	
 	init()
 	init(reals: [F])
@@ -23,9 +29,11 @@ protocol IndividualType: Hashable, Rankable, CrowdingAssignable, Genetic {
 }
 
 extension IndividualType {
+	var description: String {
+		return [reals, obj].flatten().reduce("", combine: { str, d in str + d.roundToPlaces(1).description + "," })
+	}
 }
 
 func ==<I: IndividualType>(lhs: I, rhs: I) -> Bool {
 	return lhs.hashValue == rhs.hashValue
 }
-

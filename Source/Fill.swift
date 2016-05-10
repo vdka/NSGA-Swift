@@ -1,16 +1,12 @@
 //
-//  File.swift
+//  Fill.swift
 //  NSGA-II
 //
 //  Created by Ethan Jackwitz on 1/19/16.
 //  Copyright © 2016 Ethan Jackwitz. All rights reserved.
 //
 
-func best<U: protocol<Rankable, CrowdingAssignable>>(n: Int, from individuals: [U]) -> [U] {
-	guard n < individuals.count else { return individuals }
-	
-	let dominance = assignDominance(individuals)
-	let fronts = assignFronts(dominance)
+func best<U: protocol<Rankable, CrowdingAssignable>>(n: Int, from fronts: [[U]]) -> [U] {
 	
 	var results: [U] = []
 	

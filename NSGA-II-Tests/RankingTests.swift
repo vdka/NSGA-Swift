@@ -47,16 +47,6 @@ import XCTest
 
 class RankingTests: XCTestCase {
     
-  override func setUp() {
-    super.setUp()
-    // Put setup code here. This method is called before the invocation of each test method in the class.
-  }
-
-  override func tearDown() {
-    // Put teardown code here. This method is called after the invocation of each test method in the class.
-    super.tearDown()
-  }
-	
 	func testDominance() {
 	
   	XCTAssert(Board.BL.dominates(.TR) == true)
@@ -90,7 +80,7 @@ class RankingTests: XCTestCase {
   	
 		XCTAssert(output == expectedOutput)
   }
-	
+  
 	func testFrontAssignment() {
 		let dominanceInput: [Board: Int] = [.BL: 0, .TL: 1, .BR: 1, .TR: 3]
 		

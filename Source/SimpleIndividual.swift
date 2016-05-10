@@ -11,7 +11,7 @@ struct SimpleIndividual: IndividualType, CustomStringConvertible {
 	
 	var reals: [F] = []
 	var obj: [F] = []
-	var hashValue: Int = hashArray.popLast()!
+	var hashValue: Int = counter
 	
 	init() {
 		for i in 0..<Configuration.current.nReal {
@@ -25,15 +25,6 @@ struct SimpleIndividual: IndividualType, CustomStringConvertible {
 		
 		self.reals = reals
 		
-	}
-	
-	var description: String {
-		var str = "(\(obj.first!.roundToPlaces(1))"
-		for o in obj.dropFirst() {
-			str = str + ", \(o.roundToPlaces(1))"
-		}
-		
-		return str + ")"
 	}
 }
 

@@ -9,10 +9,10 @@
 import XCTest
 
 struct Point: CrowdingAssignable {
-	var x: UInt8
-	var y: UInt8
+	var x: Int
+	var y: Int
 	var obj: [Double]
-	init(x: UInt8, y: UInt8) {
+	init(x: Int, y: Int) {
 		self.x = x
 		self.y = y
 		self.obj = [Double(x), Double(y)]
@@ -21,7 +21,7 @@ struct Point: CrowdingAssignable {
 
 extension Point: Hashable {
 	var hashValue: Int {
-		return Int("\(x)\(y)")!
+		return "\(x)\(y)".hashValue
 	}
 }
 
@@ -53,18 +53,19 @@ class FillTests: XCTestCase {
 		let points = [(1, 1), (0, 27), (27, 0), (20, 6), (14, 7), (10, 8), (9, 9), (8, 10), (7, 14), (6, 20), (13, 13)].map(Point.init)
 		let expectedOutput = Set([(1, 1), (0, 27), (27, 0), (6, 20), (20, 6), (14, 7), (7, 14)].map(Point.init))
 		
-  	var output = Set(best(7, from: points))
+    let dominance = assignDominance(points)
+    let fronts = assignFronts(dominance)
+  	var output = Set(best(7, from: fronts))
 		
 		XCTAssert(output == expectedOutput)
 		
-		output = Set(best(points.count, from: points))
+		output = Set(best(points.count, from: fronts))
 		
 		XCTAssert(output == Set(points))
 		
-		let dominance = assignDominance(points)
 		let firstFronts = assignFronts(dominance)[0..<2]
 		let ff = Set(firstFronts.flatten())
-		output = Set(best(ff.count, from: points))
+		output = Set(best(ff.count, from: fronts))
 		
 		XCTAssert(ff == output)
 		

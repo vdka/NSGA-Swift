@@ -6,41 +6,32 @@
 //  Copyright © 2016 Ethan Jackwitz. All rights reserved.
 //
 
-import Foundation
+var bestNetRevenue: F = -F.infinity {
+  didSet {
+//  	print("New best net revenue: \(bestNetRevenue)")
+  }
+}
 
-/**
-Returns the standard output and exit status of running _command_ in a subshell.
-The operator will block (by polling the current run loop) until _command_ exits.
-@param command An absolute path to an executable, optionally followed by one or more arguments.
-@return (output, exitStatus) The output and exit status of the executable invoked
-by _command_.
-*/
-func bash(command: String) -> (output: String, exitStatus: Int) {
-	let tokens = command.componentsSeparatedByString(" ")
-	let launchPath = tokens[0]
-	let arguments = tokens[1..<tokens.count].filter({ !$0.isEmpty })
-	
-	let task = NSTask()
-	task.launchPath = launchPath
-	task.arguments = Array(arguments)
-	let stdout = NSPipe()
-	task.standardOutput = stdout
-	
-	task.launch()
-	task.waitUntilExit()
-	
-	let outData = stdout.fileHandleForReading.readDataToEndOfFile()
-	let outStr = String(data: outData, encoding: NSUTF8StringEncoding)!
-	return (outStr, Int(task.terminationStatus))
+var bestFlowDeficit: F = F.infinity {
+  didSet {
+//  	print("New best flow deficit: \(bestFlowDeficit)")
+  }
 }
 
 struct Water: ProblemType {
+  
+  static var columnNames: [String] = {
+		 let crops = ["Rice", "Wheat", "Barley", "Maize", "Canola", "Oats", "Soybean", "W_pasture", "S_pasture", "Lucerne", "Vines", "W_veg", "S_veg", "Citrus", "Stone_fruit"]
+		let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+
+    return crops + months + ["Profit", "Flow Deficit"]
+  }()
 	
 	struct ConstrainedIndividual: IndividualType {
 		var reals: [F] = []
 		var obj: [F] = []
 		var constraintViolation: F = 0
-		var hashValue: Int = hashArray.popLast()!
+		var hashValue: Int = counter
 		
 		init() {
 			for i in 0..<Configuration.current.nReal {
@@ -91,67 +82,51 @@ struct Water: ProblemType {
 	
 	typealias Individual = ConstrainedIndividual
 	
-	static let evaluatorBasePath = "/Users/Ethan/Downloads/evaluator_code/"
-	static let evaluatorFile = evaluatorBasePath + "average.dat"
 	static let nCrops = 15
-	
-	//	static let cropValues = [10000].repeated(15)
-	//	static let cropValuesStr = String(cropValues.reduce("") {
-	//		return $0 + $1.description + " "
-	//	}.characters.dropLast())
-	//
-	//	static let tenvf = [100000].repeated(12)
-	//	static let tenvfStr = String(tenvf.reduce("") {
-	//		return $0 + $1.description + " "
-	//	}.characters.dropLast())
-	
-	
+  
+  static func argsFor(individual: Individual) -> [String] {
+    let realStrings = individual.reals.map { i -> String in
+//      guard i >= 100 else { return "0" } // clamp values < 100 to 0 WILL SKEW RESULTS
+      return Int(i.roundToPlaces(0)).description
+    }
+		
+    let args: [String] = [evaluatorFile, nCrops.description] + realStrings
+    
+    return args
+  }
+  
 	static func evaluate(inout individual: Individual) {
-		
-		let realsStr = String(individual.reals.reduce("") {
-			return $0 + $1.description + " "
-			}.characters.dropLast())
-		
-		let evalArgs = "\(evaluatorFile) \(nCrops) \(realsStr)"
-		
-		let (output, exitCode) = bash("\(evaluatorBasePath + "evaluator") \(evalArgs)")
+    
+    let args = argsFor(individual)
+    
+    let r = evaluateWater(args)
+    
+		let (exitCode, netRevenue, flowDeficit, constraintViolation) = r
 		
 		guard exitCode == 0 else { fatalError("evaluator returned with exit code \(exitCode)") }
 		
-		let tokens = output.characters.dropLast().split(" ").map(String.init)
+		individual.obj = [netRevenue, flowDeficit.clamp(min: 0, max: Double.infinity)]
+		individual.constraintViolation = constraintViolation.clamp(min: 0, max: F.infinity)
 		
-		let netRevenue = F(tokens[0])!
-		let flowDeficit = F(tokens[1])!
-		let constraintViolation = F(tokens[2])!
+		guard !netRevenue.isSignMinus && constraintViolation == 0 else { return }
 		
-		individual.obj = [netRevenue, flowDeficit]
-		individual.constraintViolation = constraintViolation
-		//		individual.constraintViolation =
+		if flowDeficit < bestFlowDeficit {
+			bestFlowDeficit = flowDeficit
+		}
 		
-		//		return [netRevenue, flowDeficit, feasable]
+		if netRevenue > bestNetRevenue {
+			bestNetRevenue = netRevenue
+		}
 	}
 	
 	static var config: Configuration {
 		
-		let minCrops: [F] = [0.0].repeated(15)
 		let minTenvf: [F] = [0.0].repeated(12)
-		let maxCrops: [F] = [121808.0].repeated(15)
 		let maxTenvf: [F] = [250000.0].repeated(12)
+		let minCrops: [F] = [0.0].repeated(15)
+		let maxCrops: [F] = [121808.0].repeated(15)
 		
 		let c = Configuration(nReal: 15 + 12, nObj: 2, minReal: minCrops + minTenvf, maxReal: maxCrops + maxTenvf, optimizationDirection: [.Maximize, .Minimize])
 		return c
-	}
-}
-
-extension Water.ConstrainedIndividual: CustomStringConvertible {
-	var description: String {
-//		return "profit: \(obj[0].roundToPlaces(1)), water deficit: \(obj[1].roundToPlaces(1)), constrViolation: \(constraintViolation.roundToPlaces(0))"
-		return "\(obj[0].roundToPlaces(1)), \(obj[1].roundToPlaces(1))"
-	}
-}
-
-extension Water.ConstrainedIndividual {
-	var stats: String {
-		return reals.reduce("", combine: { str, real in [str, real.roundToPlaces(1).description, ", "].joinWithSeparator("") })
 	}
 }

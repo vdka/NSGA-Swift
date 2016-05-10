@@ -44,7 +44,7 @@ class CrowdingTests: XCTestCase {
 	func testCrowding() {
 
 		let f: (Int) -> Point = {
-			let x = UInt8($0)
+			let x = Int($0)
 			return Point(x: x, y: x * x)
 		}
 		

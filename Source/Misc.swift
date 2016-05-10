@@ -79,16 +79,25 @@ func **(base: Float, exponent: Float) -> Float {
 	return powf(base, exponent)
 }
 
-extension Dictionary {
+import Foundation
 
-	init<S: SequenceType
-		where S.Generator.Element == Element>
-		(_ seq: S)
-	{
-		self.init()
-		var gen = seq.generate()
-		while let (k, v) = gen.next() {
-			self[k] = v
-		}
+public func measure<T>(iterations: UInt = 1, forBlock block: () -> T) -> (time: Double, result: T) {
+  precondition(iterations > 0, "Iterations must be a positive integer")
+  
+  var total : Double = 0
+  var samples = [Double]()
+  
+  for _ in 0..<iterations{
+    let start = NSDate.timeIntervalSinceReferenceDate()
+    block()
+    let took = Double(NSDate.timeIntervalSinceReferenceDate() - start)
+    
+    samples.append(took)
+    
+    total += took
   }
+  
+  let mean = total / Double(iterations)
+  
+  return (time: mean, result: block())
 }
