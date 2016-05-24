@@ -35,7 +35,7 @@ struct Water: ProblemType {
 		
 		init() {
 			for i in 0..<Configuration.current.nReal {
-				let r = F.random(Configuration.current.minReal[i], Configuration.current.maxReal[i])
+        let r = F.random(Configuration.current.minReal[i], Configuration.current.maxReal[i])
 				self.reals.append(r)
 			}
 		}
@@ -75,7 +75,7 @@ struct Water: ProblemType {
     	switch (flagOurs, flagTheirs) {
   		case (true, false): return true
   		case (false, true): return false
-  		default: return .None
+  		default: return .none
     	}
     }
 	}
@@ -87,7 +87,7 @@ struct Water: ProblemType {
   static func argsFor(individual: Individual) -> [String] {
     let realStrings = individual.reals.map { i -> String in
 //      guard i >= 100 else { return "0" } // clamp values < 100 to 0 WILL SKEW RESULTS
-      return Int(i.roundToPlaces(0)).description
+      return Int(i.roundTo(places: 0)).description
     }
 		
     let args: [String] = [evaluatorFile, nCrops.description] + realStrings
@@ -95,9 +95,9 @@ struct Water: ProblemType {
     return args
   }
   
-	static func evaluate(inout individual: Individual) {
+	static func evaluate(individual: inout Individual) {
     
-    let args = argsFor(individual)
+    let args = argsFor(individual: individual)
     
     let r = evaluateWater(args)
     
@@ -105,8 +105,8 @@ struct Water: ProblemType {
 		
 		guard exitCode == 0 else { fatalError("evaluator returned with exit code \(exitCode)") }
 		
-		individual.obj = [netRevenue, flowDeficit.clamp(min: 0, max: Double.infinity)]
-		individual.constraintViolation = constraintViolation.clamp(min: 0, max: F.infinity)
+		individual.obj = [netRevenue, flowDeficit.clamp(lower: 0, upper: Double.infinity)]
+		individual.constraintViolation = constraintViolation.clamp(lower: 0, upper: F.infinity)
 		
 		guard !netRevenue.isSignMinus && constraintViolation == 0 else { return }
 		

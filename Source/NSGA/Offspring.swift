@@ -10,7 +10,7 @@ func generateOffspring<Individual: IndividualType>(parent a: Individual, parent 
 	
 	let (mutationChance, crossoverChance, eta) = (Configuration.current.mutationChance, Configuration.current.crossoverChance, Configuration.current.eta)
 	var (c1Reals, c2Reals): ([F], [F]) = ([], [])
-	let performCrossover = Bool.random(crossoverChance)
+	let performCrossover = Bool.random(probability: crossoverChance)
 		
 	for index in a.reals.indices {
 		let (a, b) = (a.reals[index], b.reals[index])
@@ -23,7 +23,7 @@ func generateOffspring<Individual: IndividualType>(parent a: Individual, parent 
 			(c, d) = (a, b)
 		}
 		
-		switch (Bool.random(mutationChance), Bool.random(mutationChance)) {
+		switch (Bool.random(probability: mutationChance), Bool.random(probability: mutationChance)) {
 		case (true, true):
 			c1Reals.append(c.mutate(eta: eta, lowerBound: lower, upperBound: upper))
 			c2Reals.append(d.mutate(eta: eta, lowerBound: lower, upperBound: upper))

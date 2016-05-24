@@ -22,19 +22,19 @@ func crowdingDistance<U: CrowdingAssignable>(front: [U]) -> [F] {
 
 	let values = transpose(front.map({ $0.obj }))
 
-	var crowding: [F] = Array.init(count: front.count, repeatedValue: 0.0)
+  var crowding: [F] = Array(repeatElement(0.0, count: front.count))
 
 	for objValues in values {
 
-		let sortedPairs = objValues.enumerate().sort({ $0.element < $1.element })
+		let sortedPairs = objValues.enumerated().sorted { $0.element < $1.element }
 
-		let range = objValues.maxElement()! - objValues.minElement()!
+		let range = objValues.max()! - objValues.min()!
 
-		for (index, pair) in sortedPairs.enumerate() {
+		for (index, pair) in sortedPairs.enumerated() {
 			guard let prev = sortedPairs[safe: index - 1]?.element,
       			let next = sortedPairs[safe: index + 1]?.element
 			else {
-				crowding[pair.index] = F.infinity
+				crowding[pair.offset] = F.infinity
 				continue
 			}
 			
@@ -42,7 +42,7 @@ func crowdingDistance<U: CrowdingAssignable>(front: [U]) -> [F] {
 			
 			let c = abs((next - prev) / range)
 
-			crowding[pair.index] += c
+			crowding[pair.offset] += c
 		}
 
 	}

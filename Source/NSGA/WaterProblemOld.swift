@@ -76,13 +76,13 @@ struct Model {
 
 		//Tokenize the file by line
 		let byLines = content.characters
-			.split("\n")
+      .split(separator: "\n")
 			.map(String.init)
 
 		//Additionally tokenize each line by spaces.
 		var tokens = byLines.map {
 			$0.characters
-				.split(" ")
+        .split(separator: " ")
 				.map(String.init)
 		}
 

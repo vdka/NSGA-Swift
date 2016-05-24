@@ -7,9 +7,9 @@
 //
 
 extension Double {
-	func clamp(min min: Double, max: Double) -> Double {
-		if self < min { return min }
-		if self > max { return max }
+	func clamp(lower: Double, upper: Double) -> Double {
+		if self < lower { return lower }
+		if self > upper { return upper }
 		return self
 	}
 	
@@ -22,7 +22,7 @@ extension Double {
 	
 	- returns: The mutated value.
 	*/
-	func mutate(eta eta: Double = 20.0, lowerBound: Double, upperBound: Double) -> Double {
+	func mutate(eta: Double = 20.0, lowerBound: Double, upperBound: Double) -> Double {
 		
 		let delta1 = (self - lowerBound) / (upperBound - lowerBound)
 		let delta2 = (upperBound - self) / (upperBound - lowerBound)
@@ -38,14 +38,14 @@ extension Double {
 			let val = 2.0 * (1.0 - rnd) + 2.0 * (rnd - 0.5) * (xy ** (eta + 1.0))
 			deltaq = 1.0 - (val ** power)
 		}
-		let ret = (self + deltaq * (upperBound - lowerBound)).clamp(min: lowerBound, max: upperBound)
+		let ret = (self + deltaq * (upperBound - lowerBound)).clamp(lower: lowerBound, upper: upperBound)
 		
 		return ret
 	}
 }
 
 extension Comparable {
-  func clamp(lower lower: Self, upper: Self) -> Self {
+  func clamp(lower: Self, upper: Self) -> Self {
     return min(max(self, lower), upper)
   }
 }
@@ -60,7 +60,7 @@ extension Float {
 	
 	- returns: The mutated value.
 	*/
-	func mutate(eta eta: Float = 20.0, lowerBound: Float, upperBound: Float) -> Float {
+	func mutate(eta: Float = 20.0, lowerBound: Float, upperBound: Float) -> Float {
 		
 		let delta1 = (self - lowerBound) / (upperBound - lowerBound)
 		let delta2 = (upperBound - self) / (upperBound - lowerBound)

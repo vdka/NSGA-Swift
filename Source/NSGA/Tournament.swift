@@ -6,14 +6,14 @@
 //  Copyright © 2016 Ethan Jackwitz. All rights reserved.
 //
 
-func tournamentSelection<U: Rankable>(a: U, _ b: U) -> U {
+func tournamentSelection<U: Rankable>(_ a: U, _ b: U) -> U {
 	
-	switch a.dominates(b) {
+	switch a.dominates(other: b) {
 	case true?:
 		return a
 	case false?:
 		return b
-	case .None:
+	case .none:
 		return [a, b].randomItem()
 	}
 	

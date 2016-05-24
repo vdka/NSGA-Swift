@@ -9,6 +9,6 @@
 import PackageDescription
 
 let package = Package(
-	name: "NSGA",
-	dependencies: [ ]
+  name: "NSGA",
+  dependencies: [ .Package(url: "git@github.com:VDKA/SwiftPCG.git", majorVersion: 0) ]
 )

@@ -7,38 +7,38 @@
 //
 
 struct Archive<Problem: ProblemType> {
-  
+
   typealias Individual = Problem.Individual
-	
+
 	var members: [Set<Individual>] = []
-	
-	mutating func insert(front front: [Individual]) {
+
+	mutating func insert(front: [Individual]) {
 		members.append(Set(front))
 		//TODO (ethan): print/log each insertion?
 	}
-  
+
   var finalFront: Set<Individual> {
     return members.last!
   }
-  
-  func formatIndividual(ind: Individual) -> [String] {
-    let reals = ind.reals.map({ Int($0.roundToPlaces(0)).description })
-    let objec = ind.obj.map({ Int($0.roundToPlaces(0)).description })
-    
+
+  func formatIndividual(_ ind: Individual) -> [String] {
+    let reals = ind.reals.map({ Int($0.roundTo(places: 0)).description })
+    let objec = ind.obj.map({ Int($0.roundTo(places: 0)).description })
+
     return reals + objec
   }
-  
+
 	func toCSV() -> String {
     guard !members.isEmpty else {
 			return "No valid results found"
     }
-    
-    let headings = Problem.columnNames.joinWithSeparator(", ")
+
+    let headings = Problem.columnNames.joined(separator: ", ")
 
     let body = finalFront.map { ind in
-      return formatIndividual(ind).joinWithSeparator(", ")
-    }.joinWithSeparator("\n")
-    
-    return [headings, body].joinWithSeparator("\n")
+      return formatIndividual(ind).joined(separator: ", ")
+    }.joined(separator: "\n")
+
+    return [headings, body].joined(separator: "\n")
 	}
 }

@@ -6,6 +6,7 @@
 //
 
 import Darwin
+import SwiftPCG
 
 // each type has its own random
 
@@ -18,42 +19,42 @@ public extension Bool {
 
 public extension Int {
 	/// SwiftRandom extension
-	public static func random(range: Range<Int>) -> Int {
-		return range.startIndex + Int(arc4random_uniform(UInt32(range.endIndex - range.startIndex)))
+	public static func random(_ range: Range<Int>) -> Int {
+		return range.lowerBound + Int(rng.boundedNext(UInt32(range.upperBound - range.lowerBound)))
 	}
 
 	/// SwiftRandom extension
-	public static func random(lower: Int = 0, _ upper: Int = 100, not: Int? = nil) -> Int {
+	public static func random(_ lower: Int = 0, _ upper: Int = 100, not: Int? = nil) -> Int {
 		guard let not = not else {
-  		return lower + Int(arc4random_uniform(UInt32(upper - lower + 1)))
+  		return lower + Int(rng.boundedNext(UInt32(upper - lower + 1)))
 		}
-		
-  	let r = lower + Int(arc4random_uniform(UInt32(upper - lower + 1)))
-		
+
+  	let r = lower + Int(rng.boundedNext(UInt32(upper - lower + 1)))
+
 		guard r != not else { return random(lower, upper, not: not) }
-		
+
 		return r
 	}
 }
 
 public extension Double {
 	/// SwiftRandom extension
-	public static func random(lower: Double = 0, _ upper: Double = 100) -> Double {
-		return (Double(arc4random()) / 0xFFFFFFFF) * (upper - lower) + lower
+	public static func random(_ lower: Double = 0, _ upper: Double = 100) -> Double {
+		return (Double(rng.next()) / 0xFFFFFFFF) * (upper - lower) + lower
 	}
 }
 
 public extension Float {
 	/// SwiftRandom extension
-	public static func random(lower: Float = 0, _ upper: Float = 100) -> Float {
-		return (Float(arc4random()) / 0xFFFFFFFF) * (upper - lower) + lower
+	public static func random(_ lower: Float = 0, _ upper: Float = 100) -> Float {
+		return (Float(rng.next()) / 0xFFFFFFFF) * (upper - lower) + lower
 	}
 }
 
 public extension Array {
 	/// SwiftRandom extension
 	public func randomItem() -> Element {
-		let index = Int(arc4random_uniform(UInt32(self.count)))
+		let index = Int(rng.boundedNext(UInt32(self.count)))
 		return self[index]
 	}
 
@@ -84,7 +85,7 @@ public struct Randoms {
 	}
 
 	public static func randomInt(range: Range<Int>) -> Int {
-		return Int.random(range.startIndex, range.endIndex)
+		return Int.random(range.lowerBound, range.upperBound)
 	}
 
 	public static func randomInt(lower: Int = 0, _ upper: Int = 100) -> Int {

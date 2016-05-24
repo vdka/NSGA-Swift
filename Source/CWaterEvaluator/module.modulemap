@@ -1,0 +1,4 @@
+module CWaterEvaluator {
+  header "include/public.h"
+  export *
+}

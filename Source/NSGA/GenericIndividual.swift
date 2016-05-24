@@ -12,7 +12,7 @@ var _counter: Int = 0
 
 var counter: Int {
   let c = _counter
-  defer { _counter = _counter.successor() }
+  defer { _counter += 1 }
   return _counter
 }
 
@@ -30,7 +30,7 @@ protocol IndividualType: Hashable, Rankable, CrowdingAssignable, Genetic, Custom
 
 extension IndividualType {
 	var description: String {
-		return [reals, obj].flatten().reduce("", combine: { str, d in str + d.roundToPlaces(1).description + "," })
+    return [reals, obj].flatten().reduce("", combine: { str, d in str + d.roundTo(places: 1).description + "," })
 	}
 }
 

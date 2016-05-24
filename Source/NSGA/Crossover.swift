@@ -28,7 +28,7 @@ extension F {
 		let y1 = min(self, other)
 		let y2 = max(self, other)
 		
-		let rand = F.random(0, 1)
+    let rand = F.random(0, 1)
 		
 		var beta = 1.0 + (2.0 * (y1 - lowerBound) / (y2 - y1))
 		var alpha = 2.0 - (beta ** -(eta + 1.0))
@@ -40,7 +40,7 @@ extension F {
 			betaq = (1.0 / (2.0 - rand * alpha)) ** (1.0 / (eta + 1.0))
 		}
 		
-		let c1 = (0.5 * ((y1 + y2) - betaq * (y2 - y1))).clamp(min: lowerBound, max: upperBound)
+		let c1 = (0.5 * ((y1 + y2) - betaq * (y2 - y1))).clamp(lower: lowerBound, upper: upperBound)
 		beta = 1.0 + (2.0 * (upperBound - y2) / (y2 - y1))
 		alpha = 2.0 - (beta ** -(eta + 1.0))
 		
@@ -50,7 +50,7 @@ extension F {
 			betaq = (1.0 / (2.0 - rand * alpha)) ** (1.0 / (eta + 1.0))
 		}
 		
-		let c2 = (0.5 * ((y1 + y2) + betaq * (y2 - y1))).clamp(min: lowerBound, max: upperBound)
+		let c2 = (0.5 * ((y1 + y2) + betaq * (y2 - y1))).clamp(lower: lowerBound, upper: upperBound)
 		
 		return (c1, c2)
 		

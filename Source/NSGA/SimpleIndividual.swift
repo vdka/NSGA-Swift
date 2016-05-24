@@ -48,7 +48,7 @@ extension SimpleIndividual {
 		switch (flagOurs, flagTheirs) {
 		case (true, false): return true
 		case (false, true): return false
-		default: return .None
+		default: return .none
 		}
 	}
 }

@@ -10,14 +10,14 @@ import Darwin
 
 extension F {
 	/// Rounds the double to decimal places value
-	func roundToPlaces(places:Int) -> F {
+	func roundTo(places:Int) -> F {
 		let divisor = 10.0 ** F(places)
 		return round(self * divisor) / divisor
 	}
 }
 
 extension Array {
-	subscript (safe index: Int) -> Generator.Element? {
+	subscript (safe index: Int) -> Iterator.Element? {
 		return indices ~= index ? self[index] : nil
 	}
 
@@ -26,7 +26,7 @@ extension Array {
 	*/
 	mutating func shuffle() {
 		
-		for i in self.indices.dropFirst().reverse() {
+		for i in self.indices.dropFirst().reversed() {
 			let j = Int.random(0, i, not: i)
 			swap(&self[i], &self[j])
 		}
@@ -46,18 +46,18 @@ extension Array {
 		return shuffled
 	}
 	
-	func repeated(n: UInt) -> [Element] {
+	func repeated(_ n: Int) -> [Element] {
 		guard self.count == 1 else { fatalError("Implementation limited to single element arrays") }
-		return Array.init(count: Int(n), repeatedValue: first!)
+    return Array(repeatElement(first!, count: n))
 	}
 }
 
-func transpose<T>(input: [[T]]) -> [[T]] {
+func transpose<T>(_ input: [[T]]) -> [[T]] {
 	guard !input.isEmpty else { return [] }
 	let count = input[0].count
-	var out: [[T]] = Array.init(count: count, repeatedValue: [])
+	var out: [[T]] = Array(repeatElement([], count: count))
 	for outer in input {
-		for (index, inner) in outer.enumerate() {
+		for (index, inner) in outer.enumerated() {
 			out[index].append(inner)
 		}
 	}

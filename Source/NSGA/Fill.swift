@@ -17,10 +17,12 @@ func best<U: protocol<Rankable, CrowdingAssignable>>(n: Int, from fronts: [[U]])
 			results += front
 			nMembers += front.count
 		} else {
-			
+      
 			//TODO (ethan): guage performance the map can be removed and append(ind.0) used. 1 less O(N) operation.
 			//This computes crowding distance, then sorts by it.
-			let sortedFront = zip(front, crowdingDistance(front)).sort({ $0.1.1 < $0.0.1 }).map({ $0.0 })
+			let sortedFront = zip(front, crowdingDistance(front: front))
+        .sorted { $0.1.1 < $0.0.1 }
+        .map { $0.0 } 
 			
 			for ind in sortedFront {
 				results.append(ind)

@@ -12,7 +12,7 @@
   import Darwin.C
 #endif
 
-func bytesFromString(string: String) -> [UInt8] {
+func bytesFrom(string: String) -> [UInt8] {
   return Array(string.utf8)
 }
 
@@ -22,9 +22,9 @@ func stringFromBytes(bytes: UnsafeMutablePointer<UInt8>, count: Int) -> String {
 }
 
 // Use fopen/fwrite to output string
-func writeStringToFile(string: String, path: String) -> Bool {
+func writeStringToFile(_ string: String, path: String) -> Bool {
   let fp = fopen(path, "w"); defer { fclose(fp) }
-  let byteArray = bytesFromString(string)
+  let byteArray = bytesFrom(string: string)
   let count = fwrite(byteArray, 1, byteArray.count, fp)
   return count == string.utf8.count
 }

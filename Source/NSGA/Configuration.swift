@@ -37,7 +37,7 @@ struct Configuration {
 		if let optimizationDirection = optimizationDirection {
 			self.optimizationDirection = optimizationDirection
 		} else {
-			self.optimizationDirection = Array<Direction>(count: nObj, repeatedValue: .Minimize)
+      self.optimizationDirection = Array(repeatElement(.Minimize, count: nObj))
 		}
 	}
 }

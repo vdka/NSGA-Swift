@@ -21,9 +21,9 @@ func assignDominance<U: Rankable>(individuals: [U]) -> [U: Int] {
   // This ends up being faster than working with an actual dictionary.
   var domination: [(U, Int)] = individuals.map({ ($0, 0) })
 
-	for (i, individual) in individuals.enumerate() {
+	for (i, individual) in individuals.enumerated() {
 		for otherIndividual in individuals
-			where individual.dominates(otherIndividual) == false && individual != otherIndividual
+			where individual.dominates(other: otherIndividual) == false && individual != otherIndividual
 		{
       domination[i].1 += 1
 		}
