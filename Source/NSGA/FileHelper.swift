@@ -28,3 +28,15 @@ func writeStringToFile(_ string: String, path: String) -> Bool {
   let count = fwrite(byteArray, 1, byteArray.count, fp)
   return count == string.utf8.count
 }
+
+func createDirectory(path: String) -> Bool {
+
+  let result = mkdir(path, S_IRWXU | S_IRWXG | S_IRWXO)
+
+  guard result == 0 || result == EEXIST else {
+    return false
+  }
+
+  return true
+}
+

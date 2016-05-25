@@ -8,6 +8,8 @@
 
 import SwiftPCG
 
+import Foundation
+
 let usage = [
   "NSGA basePath seed nGenerations popSize",
   " - basePath is the path within which datafiles and results directories exist",
@@ -30,13 +32,23 @@ seedValue = seed
 
 var rng = PCGRand32(state: seedValue)
 
-//var basePath = "/Users/Ethan/Source/vdka/NSGA-swift/"
 var evaluatorBasePath = basePath + "/datafiles/"
-var resultsPath = basePath + "/results/"
+var resultsPath = basePath + "/results/\(Process.arguments[2])/"
 
-let fileList = ["average", "averageUnconstr", "dry", "dryUnconstr", "wet", "wetUnconstr"]
+let fileList = [
+  "average", "averageUnconstr", "averageCyclic",
+  "dry", "dryUnconstr", "dryCyclic",
+  "wet", "wetUnconstr", "wetCyclic"
+]
 
 var evaluatorFile = ""
+
+guard createDirectory(path: resultsPath) else {
+  fatalError("Failed to make directory \(resultsPath)")
+}
+
+let configSummary = [Process.arguments[2], "nEvaluations: \(nGenerations * popSize + popSize)"].joined(separator: "\n")
+writeStringToFile(configSummary, path: resultsPath + "CONFIG")
 
 for file in fileList {
   let nsgaii = NSGAII<Water>()
