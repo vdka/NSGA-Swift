@@ -11,12 +11,12 @@ import SwiftPCG
 import Foundation
 
 let usage = [
-  "NSGA basePath seed nGenerations popSize",
+  "usage: NSGA basePath seed nGenerations popSize",
   " - basePath is the path within which datafiles and results directories exist",
   " - seed is the seed used for the RNG for this run"
 ].joined(separator: "\n")
 
-guard Process.arguments.count == 5 else { fatalError(usage) }
+guard Process.arguments.count == 5 else { print(usage); exit(1) }
 
 let basePath = Process.arguments[1]
 
