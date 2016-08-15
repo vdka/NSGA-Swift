@@ -1,10 +1,3 @@
-//
-//  main.swift
-//  NSGA-II
-//
-//  Created by Ethan Jackwitz on 29/12/2015.
-//  Copyright © 2015 Ethan Jackwitz. All rights reserved.
-//
 
 import SwiftPCG
 
@@ -36,16 +29,16 @@ var evaluatorBasePath = basePath + "/datafiles/"
 var resultsPath = basePath + "/results/\(Process.arguments[2])/"
 
 let fileList = [
-  "average", "averageUnconstr", "averageCyclic",
-  "dry", "dryUnconstr", "dryCyclic",
-  "wet", "wetUnconstr", "wetCyclic"
+  "averageCotton",
+  "average",
+  //"averageUnconstr", "averageCyclic",
+  //"dry", "dryUnconstr", "dryCyclic",
+  //"wet", "wetUnconstr", "wetCyclic"
 ]
 
 var evaluatorFile = ""
 
-guard createDirectory(path: resultsPath) else {
-  fatalError("Failed to make directory \(resultsPath)")
-}
+guard createDirectory(path: resultsPath) else { fatalError("Failed to make directory \(resultsPath)") }
 
 let configSummary = [Process.arguments[2], "nEvaluations: \(nGenerations * popSize + popSize)"].joined(separator: "\n")
 writeStringToFile(configSummary, path: resultsPath + "CONFIG")
@@ -56,4 +49,3 @@ for file in fileList {
   let results = nsgaii.run(generations: nGenerations, popSize: popSize)
   writeStringToFile(nsgaii.archive.toCSV(), path: resultsPath + file + ".csv")
 }
-
