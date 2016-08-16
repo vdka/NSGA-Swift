@@ -20,7 +20,7 @@ func evaluateWater(_ arguments: [String]) -> (exitCode: Int, netRev: Double, env
 
   defer {
     for arg in argv..<argv + arguments.count {
-      free(UnsafeMutablePointer<Void>(arg.pointee))
+      free(UnsafeMutableRawPointer(arg.pointee))
     }
     argv.deallocate(capacity: arguments.count + 1)
   }
