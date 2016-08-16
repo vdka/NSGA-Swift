@@ -29,7 +29,9 @@ var evaluatorBasePath = basePath + "/datafiles/"
 var resultsPath = basePath + "/results/\(CommandLine.arguments[2])/"
 
 let fileList = [
+  "dryCotton",
   "averageCotton",
+  "wetCotton",
   //"average",
   //"averageUnconstr", "averageCyclic",
   //"dry", "dryUnconstr", "dryCyclic",
