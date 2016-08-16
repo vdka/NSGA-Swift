@@ -4,7 +4,8 @@
 when installed run the following command to install the latest supported Swift Compiler
 
 ```sh
-swiftenv install DEVELOPMENT-SNAPSHOT-2016-05-09-a
+cd Swift-NSGA
+swiftenv install
 ```
 
 With this done you can now compile Swift code. Run `swift build -c release`. You should see the following:

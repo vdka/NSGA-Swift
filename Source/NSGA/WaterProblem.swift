@@ -101,7 +101,7 @@ struct Water: ProblemType {
 		individual.obj = [netRevenue, flowDeficit.clamp(lower: 0, upper: Double.infinity)]
 		individual.constraintViolation = constraintViolation.clamp(lower: 0, upper: F.infinity)
 
-		guard !netRevenue.isSignMinus && constraintViolation == 0 else { return }
+		guard !(netRevenue.sign == .minus) && constraintViolation == 0 else { return }
 
 		if flowDeficit < bestFlowDeficit {
 			bestFlowDeficit = flowDeficit

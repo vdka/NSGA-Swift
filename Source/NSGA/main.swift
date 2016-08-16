@@ -9,16 +9,16 @@ let usage = [
   " - seed is the seed used for the RNG for this run"
 ].joined(separator: "\n")
 
-guard Process.arguments.count == 5 else { print(usage); exit(1) }
+guard CommandLine.arguments.count == 5 else { print(usage); exit(1) }
 
-let basePath = Process.arguments[1]
+let basePath = CommandLine.arguments[1]
 
 var seedValue: UInt64 = 0
 
 guard
-  let seed = UInt64(Process.arguments[2], radix: 16),
-  let nGenerations = Int(Process.arguments[3]),
-  let popSize = Int(Process.arguments[4])
+  let seed = UInt64(CommandLine.arguments[2], radix: 16),
+  let nGenerations = Int(CommandLine.arguments[3]),
+  let popSize = Int(CommandLine.arguments[4])
 else { fatalError(usage) }
 
 seedValue = seed
@@ -26,7 +26,7 @@ seedValue = seed
 var rng = PCGRand32(state: seedValue)
 
 var evaluatorBasePath = basePath + "/datafiles/"
-var resultsPath = basePath + "/results/\(Process.arguments[2])/"
+var resultsPath = basePath + "/results/\(CommandLine.arguments[2])/"
 
 let fileList = [
   "averageCotton",
@@ -40,12 +40,12 @@ var evaluatorFile = ""
 
 guard createDirectory(path: resultsPath) else { fatalError("Failed to make directory \(resultsPath)") }
 
-let configSummary = [Process.arguments[2], "nEvaluations: \(nGenerations * popSize + popSize)"].joined(separator: "\n")
-writeStringToFile(configSummary, path: resultsPath + "CONFIG")
+let configSummary = [CommandLine.arguments[2], "nEvaluations: \(nGenerations * popSize + popSize)"].joined(separator: "\n")
+_ = writeStringToFile(configSummary, path: resultsPath + "CONFIG")
 
 for file in fileList {
   let nsgaii = NSGAII<Water>()
   evaluatorFile = evaluatorBasePath + file + ".dat"
   let results = nsgaii.run(generations: nGenerations, popSize: popSize)
-  writeStringToFile(nsgaii.archive.toCSV(), path: resultsPath + file + ".csv")
+  _ = writeStringToFile(nsgaii.archive.toCSV(), path: resultsPath + file + ".csv")
 }

@@ -12,8 +12,8 @@ import CWaterEvaluator
 func evaluateWater(_ arguments: [String]) -> (exitCode: Int, netRev: Double, envCost: Double, feasViolation: Double) {
 
   var argv: UnsafeMutablePointer<UnsafeMutablePointer<CChar>?> = ([""] + arguments).withUnsafeBufferPointer {
-      let buffer = UnsafeMutablePointer<UnsafeMutablePointer<CChar>?>(allocatingCapacity: $0.count + 1)
-      buffer.initializeFrom($0.map { $0.withCString(strdup) })
+      let buffer = UnsafeMutablePointer<UnsafeMutablePointer<CChar>?>.allocate(capacity: $0.count + 1)
+      buffer.initialize(from: $0.map { $0.withCString(strdup) })
       buffer[$0.count] = nil
       return buffer
   }
@@ -22,7 +22,7 @@ func evaluateWater(_ arguments: [String]) -> (exitCode: Int, netRev: Double, env
     for arg in argv..<argv + arguments.count {
       free(UnsafeMutablePointer<Void>(arg.pointee))
     }
-    argv.deallocateCapacity(arguments.count + 1)
+    argv.deallocate(capacity: arguments.count + 1)
   }
 
   var (netRev, envCost, feasViolation): (Float, Int32, Float) = (0, 0, 0)

@@ -5,7 +5,7 @@ extension F {
 	/// Rounds the double to decimal places value
 	func roundTo(places:Int) -> F {
 		let divisor = 10.0 ** F(places)
-		return round(self * divisor) / divisor
+		return Darwin.round(self * divisor) / divisor
 	}
 }
 
@@ -58,7 +58,7 @@ func transpose<T>(_ input: [[T]]) -> [[T]] {
 	return out
 }
 
-infix operator ** { associativity left precedence 155 }
+infix operator **
 
 func **(base: Int, exponent: Int) -> Int {
 	return Int(pow(Double(base), Double(exponent)))
@@ -81,9 +81,9 @@ public func measure<T>(iterations: UInt = 1, forBlock block: () -> T) -> (time: 
   var samples = [Double]()
 
   for _ in 0..<iterations{
-    let start = NSDate.timeIntervalSinceReferenceDate()
-    block()
-    let took = Double(NSDate.timeIntervalSinceReferenceDate() - start)
+    let start = NSDate.timeIntervalSinceReferenceDate
+    _ = block()
+    let took = Double(NSDate.timeIntervalSinceReferenceDate - start)
 
     samples.append(took)
 

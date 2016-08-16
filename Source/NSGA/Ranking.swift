@@ -17,7 +17,7 @@ protocol Rankable: Hashable {
 }
 
 func assignDominance<U: Rankable>(individuals: [U]) -> [U: Int] {
-  
+
   // This ends up being faster than working with an actual dictionary.
   var domination: [(U, Int)] = individuals.map({ ($0, 0) })
 
@@ -28,7 +28,7 @@ func assignDominance<U: Rankable>(individuals: [U]) -> [U: Int] {
       domination[i].1 += 1
 		}
 	}
-  
+
   var dict = [U: Int](minimumCapacity: individuals.count)
   domination.forEach({ dict[$0.0] = $0.1 })
 
@@ -36,7 +36,7 @@ func assignDominance<U: Rankable>(individuals: [U]) -> [U: Int] {
 }
 
 func assignFronts<U: Rankable>(individualsWithDominance: [U: Int]) -> [[U]] {
-  
+
 	var individualsWithDominance = individualsWithDominance
 
 	var unAssigned = Set(individualsWithDominance.keys)
@@ -52,7 +52,7 @@ func assignFronts<U: Rankable>(individualsWithDominance: [U: Int]) -> [[U]] {
 
 		var nRemoved = 0
   	for individual in unAssigned
-			where individualsWithDominance[individual] <= 0
+			where individualsWithDominance[individual]! <= 0
 		{
 			fronts[currentFront].append(individual)
 			unAssigned.remove(individual)

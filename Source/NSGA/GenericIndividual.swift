@@ -22,15 +22,15 @@ var counter: Int {
 `Genetic` provides `reals` or variables
 */
 protocol IndividualType: Hashable, Rankable, CrowdingAssignable, Genetic, CustomStringConvertible {
-	
+
 	init()
 	init(reals: [F])
-	
+
 }
 
 extension IndividualType {
 	var description: String {
-    return [reals, obj].flatten().reduce("", combine: { str, d in str + d.roundTo(places: 1).description + "," })
+    return [reals, obj].joined().reduce("", { str, d in str + d.roundTo(places: 1).description + "," })
 	}
 }
 
