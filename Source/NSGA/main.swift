@@ -42,7 +42,14 @@ var evaluatorFile = ""
 
 guard createDirectory(path: resultsPath) else { fatalError("Failed to make directory \(resultsPath)") }
 
-let configSummary = [CommandLine.arguments[2], "nEvaluations: \(nGenerations * popSize + popSize)"].joined(separator: "\n")
+let configSummary =
+  [
+    "Seed value: \(CommandLine.arguments[2])",
+    "Number of Generations: \(nGenerations)",
+    "Population Size: \(popSize)",
+    "nEvaluations: \(nGenerations * popSize + popSize)"
+  ].joined(separator: "\n")
+
 _ = writeStringToFile(configSummary, path: resultsPath + "CONFIG")
 
 for file in fileList {
@@ -51,3 +58,4 @@ for file in fileList {
   let results = nsgaii.run(generations: nGenerations, popSize: popSize)
   _ = writeStringToFile(nsgaii.archive.toCSV(), path: resultsPath + file + ".csv")
 }
+
