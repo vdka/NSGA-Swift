@@ -11,3 +11,6 @@ echo "Using seed: $SEED"
 
 ./.build/debug/NSGA $(pwd) $SEED $GENERATIONS $POPULATION
 
+echo >> $(pwd)/results/$SEED/CONFIG.txt
+echo $(date +"%d-%m @ %H:%m") >> $(pwd)/results/$SEED/CONFIG.txt
+
