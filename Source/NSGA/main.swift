@@ -53,7 +53,7 @@ let configSummary =
     "nEvaluations: \(nGenerations * popSize + popSize)"
   ].joined(separator: "\n")
 
-_ = writeStringToFile(configSummary, path: resultsPath + "CONFIG")
+_ = writeStringToFile(configSummary, path: resultsPath + "CONFIG.txt")
 
 for file in fileList {
   let nsgaii = NSGAII<Water>()
