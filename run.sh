@@ -9,7 +9,7 @@ SEED=$(od -vAn -N4 -tx4 < /dev/urandom | tr -d [:space:] )
 
 echo "Using seed: $SEED"
 
-./.build/debug/NSGA $(pwd) $SEED $GENERATIONS $POPULATION
+./.build/release/NSGA $(pwd) $SEED $GENERATIONS $POPULATION
 
 echo >> $(pwd)/results/$SEED/CONFIG.txt
 echo $(date +"%d-%m @ %H:%m") >> $(pwd)/results/$SEED/CONFIG.txt

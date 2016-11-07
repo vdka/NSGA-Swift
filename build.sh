@@ -8,6 +8,6 @@ export SDKROOT=$(xcrun --show-sdk-path --sdk macosx)
 
 SWIFTC_FLAGS="-DDebug"
 
-$CC build -Xswiftc $SWIFTC_FLAGS &&
+$CC build -c release -Xswiftc $SWIFTC_FLAGS &&
   echo "Build Succeeded!" || echo "Build Failed!"
 
