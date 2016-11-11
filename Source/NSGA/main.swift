@@ -35,10 +35,12 @@ let fileList = [
   "dryCottonCyclic",
   "averageCottonCyclic",
   "wetCottonCyclic",
-  //"average",
+  "average",
   //"averageUnconstr", "averageCyclic",
-  //"dry", "dryUnconstr", "dryCyclic",
-  //"wet", "wetUnconstr", "wetCyclic"
+  "dry",
+  //"dryUnconstr", "dryCyclic",
+  "wet",
+  //"wetUnconstr", "wetCyclic"
 ]
 
 var evaluatorFile = ""

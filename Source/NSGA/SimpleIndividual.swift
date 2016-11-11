@@ -35,11 +35,11 @@ extension SimpleIndividual {
 			let (ours, theirs) = pair
 			
 			switch direction {
-			case .Minimize:
+			case .minimize:
 				if ours < theirs { flagOurs = true }
 				if ours > theirs { flagTheirs = true }
 				
-			case .Maximize:
+			case .maximize:
 				if ours > theirs { flagOurs = true }
 				if ours < theirs { flagTheirs = true }
 			}

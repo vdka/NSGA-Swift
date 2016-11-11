@@ -7,36 +7,36 @@
 //
 
 #if os(Linux)
-  import Glibc
+    import Glibc
 #else //likely Darwin
-  import Darwin.C
+    import Darwin.C
 #endif
 
 func bytesFrom(string: String) -> [UInt8] {
-  return Array(string.utf8)
+    return Array(string.utf8)
 }
 
 // Convert UInt8 bytes to String
 func stringFromBytes(bytes: UnsafeMutablePointer<UInt8>, count: Int) -> String {
-  return String((0..<count).map ({ Character(UnicodeScalar(bytes[$0])) }))
+    return String((0..<count).map ({ Character(UnicodeScalar(bytes[$0])) }))
 }
 
 // Use fopen/fwrite to output string
 func writeStringToFile(_ string: String, path: String) -> Bool {
-  let fp = fopen(path, "w"); defer { fclose(fp) }
-  let byteArray = bytesFrom(string: string)
-  let count = fwrite(byteArray, 1, byteArray.count, fp)
-  return count == string.utf8.count
+    let fp = fopen(path, "w"); defer { fclose(fp) }
+    let byteArray = bytesFrom(string: string)
+    let count = fwrite(byteArray, 1, byteArray.count, fp)
+    return count == string.utf8.count
 }
 
 func createDirectory(path: String) -> Bool {
 
-  let result = mkdir(path, S_IRWXU | S_IRWXG | S_IRWXO)
+    let result = mkdir(path, S_IRWXU | S_IRWXG | S_IRWXO)
 
-  guard result == 0 || result == EEXIST else {
-    return false
-  }
-
-  return true
+    guard result == 0 || errno == EEXIST else {
+        return false
+    }
+    
+    return true
 }
 
