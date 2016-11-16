@@ -45,7 +45,7 @@ int evaluateWaterC(int argc, char** argv, float* nr_cost, int* env_cost, float* 
     *feas_violation =
         evaluate_total_constraint_violation(solution_x, p, water.wreq, allocation, water.c,
                                             water.gw_proportion, water.gw_limit, water.tarea,
-                                            water.area_limits, water.min_tarea);
+                                            water.area_limits, water.min_tarea, env_cost, water.tenvf);
     //   printf("%f %d %f\n",*nr_cost,*env_cost,*feas_violation);
     /* printf("%f\n",feas_violation); */
     for (int m_index = start_month; m_index <= m; m_index++) {

@@ -7,7 +7,7 @@
 #include "misc.h"
 
 
-float evaluate_total_constraint_violation(int *solution_x,float *p,float **wreq,int *allocation,int c,float gw_proportion,int gw_limit,int tarea,int *area_limits,int min_tarea)
+float evaluate_total_constraint_violation(int *solution_x,float *p,float **wreq,int *allocation,int c,float gw_proportion,int gw_limit,int tarea,int *area_limits,int min_tarea,int* env_cost, int* tenvf)
 {
    int c_index,m_index;
    float total,total_violation=0;
@@ -18,6 +18,14 @@ float evaluate_total_constraint_violation(int *solution_x,float *p,float **wreq,
       total+=p[m_index];
    }
    if(total>gw_limit) total_violation+=(total-gw_limit);
+
+    for (m_index = start_month; m_index <= m; m_index++) {
+        int monthly_target = tenvf[m_index];
+        int monthly_env_cost = env_cost[m_index];
+        int min_env_cost = monthly_target * 0.5;
+        if (monthly_env_cost < min_env_cost)
+            total_violation += monthly_env_cost - min_env_cost;
+    }
    /* Constraint 2 */
    /* printf("TV=%f\n",total_violation); */
    /* for(m_index=start_month;m_index<=m;m_index++)

@@ -47,29 +47,6 @@ public func withArrayOfCStrings<R>(
 
 func evaluateWater(_ arguments: [String]) -> (exitCode: Int, netRev: Double, envCost: [Double], feasViolation: Double) {
 
-//    var buffers: [UnsafeMutablePointer<UnsafeMutablePointer<CChar>?>] = []
-//
-//    var argv: UnsafeMutablePointer<UnsafeMutablePointer<CChar>?> = ([""] + arguments).withUnsafeBufferPointer {
-//        let buffer = UnsafeMutablePointer<UnsafeMutablePointer<CChar>?>.allocate(capacity: $0.count + 1)
-//        buffer.initialize(from: $0.map { $0.withCString(strdup) })
-//        buffer[$0.count] = nil
-//        return buffer
-//    }
-
-    // TODO(vdka): Memory leak
-//    defer {
-//        argv.deallocate(capacity: arguments.count + 1)
-//        for (index, arg) in arguments.enumerated() {
-//            argv[index]?.deallocate(capacity: arg.utf8CString.count)
-//        }
-////        argv.deallocate(capacity: arguments.count + 1)
-//    }
-//
-//    return withArrayOfCStrings(argsIncludingPath) { argv in
-//        let retval = posix_spawn(&pid, path, nil, nil, argv, nil)
-//        return (retval, pid)
-//    }
-
     var (netRev, envCost, feasViolation): (Float, [Int32], Float) = (0, Array(repeatElement(0, count: 13)), 0)
 
     return withArrayOfCStrings([""] + arguments) { argv in
