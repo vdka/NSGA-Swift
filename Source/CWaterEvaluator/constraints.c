@@ -23,8 +23,9 @@ float evaluate_total_constraint_violation(int *solution_x,float *p,float **wreq,
         int monthly_target = tenvf[m_index];
         int monthly_env_cost = env_cost[m_index];
         int min_env_cost = monthly_target * 0.5;
-        if (monthly_env_cost < min_env_cost)
-            total_violation += monthly_env_cost - min_env_cost;
+        if (monthly_env_cost < min_env_cost) {
+            total_violation += min_env_cost - monthly_env_cost;
+        }
     }
    /* Constraint 2 */
    /* printf("TV=%f\n",total_violation); */

@@ -1,22 +1,4 @@
 
-var bestNetRevenue: F = -F.infinity {
-didSet {
-    //print("New best net revenue: \(bestNetRevenue)")
-}
-}
-
-var bestWetFlowDeficit: F = F.infinity {
-didSet {
-    //print("New best wet flow deficit: \(bestWetFlowDeficit)")
-}
-}
-
-var bestDryFlowDeficit: F = F.infinity {
-didSet {
-    //print("New best dry flow deficit: \(bestDryFlowDeficit)")
-}
-}
-
 struct Water: ProblemType {
 
     static var columnNames: [String] = {
@@ -105,28 +87,15 @@ struct Water: ProblemType {
         guard exitCode == 0 else { fatalError("evaluator returned with exit code \(exitCode)") }
 
         // March-August and September-February (the "dry" and "wet seasons".)
-        let dryFlowDeficit = [3, 4, 5, 6, 7, 8].map { flowDeficit[$0 - 1] }.reduce(0, +)
-        let wetFlowDeficit = [1, 2, 9, 10, 11, 12].map { flowDeficit[$0 - 1] }.reduce(0, +)
+        // let dryFlowDeficit = [3, 4, 5, 6, 7, 8].map { flowDeficit[$0 - 1] }.reduce(0, +)
+        // let wetFlowDeficit = [1, 2, 9, 10, 11, 12].map { flowDeficit[$0 - 1] }.reduce(0, +)
+        let totalFlowDeficit = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map { flowDeficit[$0 - 1] }.reduce(0, +)
 
-        individual.obj = [netRevenue, dryFlowDeficit.clamp(lower: 0, upper: .infinity), wetFlowDeficit.clamp(lower: 0, upper: .infinity)]
+        individual.obj = [netRevenue, totalFlowDeficit.clamp(lower: 0, upper: .infinity)]
         individual.constraintViolation = constraintViolation.clamp(lower: 0, upper: F.infinity)
 
         if netRevenue < 0 { return }
         if constraintViolation == 0 { return }
-
-//        guard !(netRevenue.sign == .minus) && constraintViolation == 0 else { return }
-
-        if dryFlowDeficit < bestDryFlowDeficit {
-            bestDryFlowDeficit = dryFlowDeficit
-        }
-
-        if wetFlowDeficit < bestWetFlowDeficit {
-            bestWetFlowDeficit = wetFlowDeficit
-        }
-
-        if netRevenue > bestNetRevenue {
-            bestNetRevenue = netRevenue
-        }
     }
 
     static var config: Configuration {
@@ -136,7 +105,7 @@ struct Water: ProblemType {
         let minCrops: [F] = [0.0].repeated(nCrops)
         let maxCrops: [F] = [121808.0].repeated(nCrops)
 
-        let c = Configuration(nReal: nCrops + 12, nObj: 3, minReal: minCrops + minTenvf, maxReal: maxCrops + maxTenvf, optimizationDirection: [.maximize, .minimize, .minimize])
+        let c = Configuration(nReal: nCrops + 12, nObj: 2, minReal: minCrops + minTenvf, maxReal: maxCrops + maxTenvf, optimizationDirection: [.maximize, .minimize, .minimize])
         return c
     }
 }
