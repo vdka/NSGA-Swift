@@ -63,7 +63,9 @@ struct Water: ProblemType {
 
     typealias Individual = ConstrainedIndividual
 
-    static let nCrops = 16
+    static var nCrops: Int {
+        return DataFile.current!.nCrops
+    }
 
     static func argsFor(individual: Individual) -> [String] {
         let realStrings = individual.reals.map {
@@ -71,7 +73,7 @@ struct Water: ProblemType {
             return Int($0.roundTo(places: 0)).description
         }
 
-        let args: [String] = [evaluatorFile, nCrops.description] + realStrings
+        let args: [String] = [DataFile.current!.path, nCrops.description] + realStrings
 
         return args
     }
@@ -97,14 +99,17 @@ struct Water: ProblemType {
         if netRevenue < 0 { return }
         if constraintViolation == 0 { return }
     }
-
+    
     static var config: Configuration {
-
+        
         let minTenvf: [F] = [0.0].repeated(12)
-        let maxTenvf: [F] = [250000.0].repeated(12)
+        let maxTenvf: [F] = DataFile.current!.tenvfs
         let minCrops: [F] = [0.0].repeated(nCrops)
-        let maxCrops: [F] = [121808.0].repeated(nCrops)
+        let maxCrops: [F] = Array(repeating: DataFile.current!.maxCropSize, count: nCrops)
 
+        assert(minTenvf.count == maxTenvf.count)
+        assert(minCrops.count == maxCrops.count)
+        
         let c = Configuration(nReal: nCrops + 12, nObj: 2, minReal: minCrops + minTenvf, maxReal: maxCrops + maxTenvf, optimizationDirection: [.maximize, .minimize, .minimize])
         return c
     }

@@ -29,6 +29,27 @@ func writeStringToFile(_ string: String, path: String) -> Bool {
     return count == string.utf8.count
 }
 
+// Use fread to input string
+func readStringFromFile(path: String) -> String {
+    let fp = fopen(path, "r"); defer { fclose(fp) }
+    var outputString = ""
+    let chunkSize = 1024
+    let buffer: UnsafeMutablePointer<CChar> = UnsafeMutablePointer.allocate(capacity: chunkSize)
+    defer { buffer.deallocate(capacity: chunkSize) }
+    repeat {
+        let count: Int = fread(buffer, 1, chunkSize, fp)
+        guard ferror(fp) == 0 else { break }
+        if count > 0 {
+            let ptr = unsafeBitCast(buffer, to: UnsafePointer<CChar>.self)
+            if let newString = String(validatingUTF8: ptr) {
+                outputString += newString
+            }
+        }
+    } while feof(fp) == 0
+    
+    return outputString
+}
+
 func createDirectory(path: String) -> Bool {
 
     let result = mkdir(path, S_IRWXU | S_IRWXG | S_IRWXO)
