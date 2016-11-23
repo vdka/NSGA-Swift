@@ -20,13 +20,14 @@ float evaluate_total_constraint_violation(int *solution_x,float *p,float **wreq,
    if(total>gw_limit) total_violation+=(total-gw_limit);
 
     for (m_index = start_month; m_index <= m; m_index++) {
-        int monthly_target = tenvf[m_index];
-        int monthly_env_cost = env_cost[m_index];
-        int min_env_cost = monthly_target * 0.5;
-        if (monthly_env_cost < min_env_cost) {
-            total_violation += min_env_cost - monthly_env_cost;
+        int m_allocated = allocation[m_index];
+        int m_tenvf = tenvf[m_index];
+        int min_allocation = m_tenvf / 2;
+        if (m_allocated < min_allocation) {
+            total_violation += min_allocation - m_allocated;
         }
     }
+    
    /* Constraint 2 */
    /* printf("TV=%f\n",total_violation); */
    /* for(m_index=start_month;m_index<=m;m_index++)
