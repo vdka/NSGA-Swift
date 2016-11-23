@@ -31,19 +31,15 @@ func writeStringToFile(_ string: String, path: String) -> Bool {
 
 // Use fread to input string
 func readStringFromFile(path: String) -> String {
-    let fp = fopen(path, "r"); defer { fclose(fp) }
+    let fp = fopen(path, "r"); defer {fclose(fp)}
     var outputString = ""
     let chunkSize = 1024
-    let buffer: UnsafeMutablePointer<CChar> = UnsafeMutablePointer.allocate(capacity: chunkSize)
-    defer { buffer.deallocate(capacity: chunkSize) }
+    let buffer: UnsafeMutablePointer<UInt8> = UnsafeMutablePointer.allocate(capacity: chunkSize); defer {buffer.deallocate(capacity: chunkSize)}
     repeat {
         let count: Int = fread(buffer, 1, chunkSize, fp)
-        guard ferror(fp) == 0 else { break }
+        guard ferror(fp) == 0 else {break}
         if count > 0 {
-            let ptr = unsafeBitCast(buffer, to: UnsafePointer<CChar>.self)
-            if let newString = String(validatingUTF8: ptr) {
-                outputString += newString
-            }
+            outputString += stringFromBytes(bytes: buffer, count: count)
         }
     } while feof(fp) == 0
     

@@ -58,6 +58,7 @@ struct DataFile {
         self.contents = readStringFromFile(path: path)
         self.lines = contents.characters.split(separator: "\n").map(String.init).filter({ !$0.isEmpty })
         
+        
         self.nCrops = Int(lines[0].trimmingCharacters(in: .whitespacesAndNewlines))!
 
         
@@ -68,6 +69,8 @@ struct DataFile {
         self.tenvfs = lines[3]
             .characters.split(separator: " ").map(String.init).filter({ !$0.isEmpty })
             .flatMap({ F($0) })
+        
+        precondition(lines.count == 20, "expected 20 lines in the datafile got \(lines.count)")
     }
 }
 
