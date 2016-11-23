@@ -18,5 +18,5 @@ echo >> $(pwd)/results/$SEED/CONFIG.txt
 echo $(date +"%d-%m @ %H:%m") >> $(pwd)/results/$SEED/CONFIG.txt
 echo "$branch - $commit" >> $(pwd)/results/$SEED/CONFIG.txt
 
-zip -r results/code.zip . -x '*.build*' -x '*.git*' -x '*results*' -x '*.DS_Store*' > /dev/null
+zip -r results/code.zip . -x '*Packages*' -x '*.build*' -x '*.git*' -x '*results*' -x '*.DS_Store*' > /dev/null
 
